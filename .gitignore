@@ -1,0 +1,43 @@
+# .gitignore - Açaí Seguro
+
+# Dependências Node.js
+node_modules/
+package-lock.json
+
+# Variáveis de ambiente (NUNCA COMITAR!)
+.env
+
+# Logs
+*.log
+npm-debug.log*
+logs/
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDEs e Editores
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+
+# Backups banco de dados
+*.sql.backup
+backup_*.sql
+
+# Arquivos temporários
+*.tmp
+temp/
+
+# Build e distribuição
+dist/
+build/
+
+# Testes
+coverage/
+.nyc_output/

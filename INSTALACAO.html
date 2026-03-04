@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia de Instalação - Açaí Seguro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #6B238E, #9B59B6);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .step {
+            background: #f8f9fa;
+            border-left: 5px solid #6B238E;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        
+        .step h2 {
+            color: #6B238E;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .step-number {
+            background: #6B238E;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .success {
+            background: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .error {
+            background: #f8d7da;
+            border-left: 5px solid #dc3545;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: #6B238E;
+            color: white;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 10px 5px;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            background: #9B59B6;
+            transform: translateY(-2px);
+        }
+        
+        ul {
+            margin-left: 25px;
+            margin-top: 10px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .checklist {
+            background: white;
+            border: 2px solid #6B238E;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        
+        .checklist h3 {
+            color: #6B238E;
+            margin-bottom: 15px;
+        }
+        
+        .checklist label {
+            display: block;
+            padding: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .checklist label:hover {
+            background: #f8f9fa;
+        }
+        
+        .checklist input[type="checkbox"] {
+            margin-right: 10px;
+            width: 18px;
+            height: 18px;
+        }
+        
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🍇 Guia de Instalação</h1>
+            <p>Açaí Seguro - Sistema de Gestão de Qualidade Sanitária</p>
+        </div>
+        
+        <div class="content">
+            <div class="error">
+                <strong>⚠️ Erro "psql não reconhecido"?</strong>
+                <p>Este guia mostra como configurar o sistema SEM precisar do comando psql!</p>
+            </div>
+            
+            <!-- Passo 1 -->
+            <div class="step">
+                <h2>
+                    <span class="step-number">1</span>
+                    Instalar Dependências
+                </h2>
+                
+                <p><strong>Abra o PowerShell</strong> na pasta do projeto e execute:</p>
+                
+                <div class="code-block">
+cd c:\projetos_web\vig_bat_acai\server<br>
+npm install
+                </div>
+                
+                <p>Aguarde a instalação terminar (pode demorar alguns minutos).</p>
+                
+                <div class="warning">
+                    <strong>⚠️ Erro "npm não encontrado"?</strong><br>
+                    Instale o Node.js primeiro: <a href="https://nodejs.org/" target="_blank">nodejs.org</a>
+                </div>
+            </div>
+            
+            <!-- Passo 2 -->
+            <div class="step">
+                <h2>
+                    <span class="step-number">2</span>
+                    Configurar Banco de Dados
+                </h2>
+                
+                <p><strong>Abra o pgAdmin</strong> (já vem com o PostgreSQL):</p>
+                
+                <ol>
+                    <li>Clique com botão direito em <strong>"Databases"</strong></li>
+                    <li>Selecione <strong>"Create" → "Database..."</strong></li>
+                    <li>Nome: <code>acaiseguro</code></li>
+                    <li>Clique em <strong>"Save"</strong></li>
+                </ol>
+                
+                <br>
+                
+                <p><strong>Executar o Schema:</strong></p>
+                
+                <ol>
+                    <li>Clique no banco <strong>acaiseguro</strong> (menu lateral)</li>
+                    <li>Menu superior: <strong>"Tools" → "Query Tool"</strong></li>
+                    <li>Clique no ícone 📁 <strong>"Abrir arquivo"</strong> (ou Ctrl+O)</li>
+                    <li>Navegue até: <code>c:\projetos_web\vig_bat_acai\sql\schema.sql</code></li>
+                    <li>Clique em <strong>"Abrir"</strong></li>
+                    <li>Clique no ícone ▶️ <strong>"Execute"</strong> (ou F5)</li>
+                </ol>
+                
+                <div class="success">
+                    <strong>✅ Verifique:</strong><br>
+                    No menu lateral: <code>acaiseguro → Schemas → public → Tables</code><br>
+                    Deve ter 5 tabelas: batedores, checklists, calculos_cloracao, selos, requisitos_selos
+                </div>
+                
+                <div class="warning">
+                    <strong>⚠️ Não tem PostgreSQL?</strong><br>
+                    Baixe em: <a href="https://www.postgresql.org/download/windows/" target="_blank">postgresql.org</a><br>
+                    Durante a instalação, <strong>anote a senha</strong> do usuário postgres!
+                </div>
+            </div>
+            
+            <!-- Passo 3 -->
+            <div class="step">
+                <h2>
+                    <span class="step-number">3</span>
+                    Configurar Credenciais
+                </h2>
+                
+                <p><strong>Na pasta:</strong> <code>c:\projetos_web\vig_bat_acai\server\</code></p>
+                
+                <ol>
+                    <li>Copie o arquivo <code>.env.example</code></li>
+                    <li>Renomeie a cópia para <code>.env</code></li>
+                    <li>Abra o arquivo <code>.env</code> com Bloco de Notas</li>
+                    <li>Altere a linha:</li>
+                </ol>
+                
+                <div class="code-block">
+DB_PASSWORD=SUA_SENHA_AQUI
+                </div>
+                
+                <p>Coloque a senha que você definiu na instalação do PostgreSQL.</p>
+                
+                <div class="warning">
+                    <strong>⚠️ IMPORTANTE:</strong> Salve o arquivo após alterar!
+                </div>
+            </div>
+            
+            <!-- Passo 4 -->
+            <div class="step">
+                <h2>
+                    <span class="step-number">4</span>
+                    Iniciar o Servidor
+                </h2>
+                
+                <p><strong>Opção A - Com o script:</strong></p>
+                <div class="code-block">
+cd c:\projetos_web\vig_bat_acai<br>
+.\start-server.bat
+                </div>
+                
+                <p><strong>Opção B - Manualmente:</strong></p>
+                <div class="code-block">
+cd c:\projetos_web\vig_bat_acai\server<br>
+npm run dev
+                </div>
+                
+                <div class="success">
+                    <strong>✅ Servidor funcionando quando aparecer:</strong>
+                    <pre style="margin-top: 10px;">
+╔═══════════════════════════════════════╗
+║   🍇 API AÇAÍ SEGURO 🍇              ║
+║   Servidor rodando em:                ║
+║   http://localhost:3000              ║
+╚═══════════════════════════════════════╝
+                    </pre>
+                </div>
+            </div>
+            
+            <!-- Passo 5 -->
+            <div class="step">
+                <h2>
+                    <span class="step-number">5</span>
+                    Abrir o Aplicativo
+                </h2>
+                
+                <p><strong>Clique duas vezes no arquivo:</strong></p>
+                <div class="code-block">
+c:\projetos_web\vig_bat_acai\index.html
+                </div>
+                
+                <p>O aplicativo abrirá no seu navegador!</p>
+                
+                <a href="../index.html" class="btn">🚀 Abrir Aplicativo Agora</a>
+            </div>
+            
+            <!-- Verificação -->
+            <div class="checklist">
+                <h3>📋 Checklist de Instalação</h3>
+                
+                <label>
+                    <input type="checkbox" id="check1">
+                    Node.js instalado e funcionando
+                </label>
+                
+                <label>
+                    <input type="checkbox" id="check2">
+                    PostgreSQL instalado
+                </label>
+                
+                <label>
+                    <input type="checkbox" id="check3">
+                    Dependências instaladas (npm install)
+                </label>
+                
+                <label>
+                    <input type="checkbox" id="check4">
+                    Banco de dados "acaiseguro" criado
+                </label>
+                
+                <label>
+                    <input type="checkbox" id="check5">
+                    Schema SQL executado (5 tabelas criadas)
+                </label>
+                
+                <label>
+                    <input type="checkbox" id="check6">
+                    Arquivo .env configurado com senha
+                </label>
+                
+                <label>
+                    <input type="checkbox" id="check7">
+                    Servidor rodando (http://localhost:3000)
+                </label>
+                
+                <label>
+                    <input type="checkbox" id="check8">
+                    Aplicativo aberto no navegador
+                </label>
+            </div>
+            
+            <!-- Testes -->
+            <div class="step">
+                <h2>🧪 Testar se Está Funcionando</h2>
+                
+                <p><strong>Teste 1 - API:</strong></p>
+                <p>Abra no navegador: <a href="http://localhost:3000" target="_blank">http://localhost:3000</a></p>
+                <p>Deve mostrar uma mensagem JSON.</p>
+                
+                <br>
+                
+                <p><strong>Teste 2 - Cadastro:</strong></p>
+                <ol>
+                    <li>Abra o aplicativo (index.html)</li>
+                    <li>Vá em "Cadastro"</li>
+                    <li>Preencha o formulário</li>
+                    <li>Clique em "Salvar Cadastro"</li>
+                    <li>Deve aparecer mensagem de sucesso</li>
+                </ol>
+                
+                <br>
+                
+                <p><strong>Teste 3 - Banco de Dados:</strong></p>
+                <p>No pgAdmin, execute:</p>
+                <div class="code-block">
+SELECT * FROM batedores;
+                </div>
+                <p>Deve mostrar o cadastro que você criou!</p>
+            </div>
+            
+            <!-- Problemas -->
+            <div class="step">
+                <h2>🐛 Problemas Comuns</h2>
+                
+                <div class="error">
+                    <strong>❌ "Port 3000 already in use"</strong><br>
+                    Solução: Abra <code>server\.env</code> e mude <code>PORT=3001</code>
+                </div>
+                
+                <div class="error">
+                    <strong>❌ "Erro ao conectar no banco"</strong><br>
+                    Solução: Verifique a senha no arquivo <code>.env</code>
+                </div>
+                
+                <div class="error">
+                    <strong>❌ "Cannot find module"</strong><br>
+                    Solução: Execute <code>npm install</code> novamente
+                </div>
+                
+                <div class="error">
+                    <strong>❌ Frontend não salva dados</strong><br>
+                    Solução: Verifique se o servidor está rodando em http://localhost:3000
+                </div>
+            </div>
+            
+            <!-- Links -->
+            <div class="step">
+                <h2>📚 Documentação Completa</h2>
+                
+                <a href="SETUP_SIMPLES.md" class="btn">📖 SETUP Simplificado</a>
+                <a href="SETUP.md" class="btn">📘 SETUP Detalhado</a>
+                <a href="API_EXAMPLES.md" class="btn">🔌 Exemplos de API</a>
+                <a href="README.md" class="btn">📄 README</a>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><strong>Açaí Seguro</strong> - Sistema de Gestão de Qualidade Sanitária</p>
+            <p>Desenvolvido para segurança alimentar e saúde pública</p>
+        </div>
+    </div>
+    
+    <script>
+        // Salvar progresso do checklist
+        document.querySelectorAll('.checklist input[type="checkbox"]').forEach(checkbox => {
+            const id = checkbox.id;
+            const saved = localStorage.getItem(id);
+            if (saved === 'true') {
+                checkbox.checked = true;
+            }
+            
+            checkbox.addEventListener('change', function() {
+                localStorage.setItem(id, this.checked);
+            });
+        });
+    </script>
+</body>
+</html>

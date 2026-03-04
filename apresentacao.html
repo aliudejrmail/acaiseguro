@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Açaí Seguro - Bem-vindo</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .apresentacao-container { 
+            max-width: 450px;
+            width: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.9) 100%);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+            padding: 3rem 2.5rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.8);
+        }
+        
+        .logo { 
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .logo i { 
+            font-size: 4rem;
+            background: linear-gradient(135deg, #6B238E, #9B59B6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 2px 8px rgba(107,35,142,0.2));
+        }
+        
+        .logo h1 { 
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, #6B238E, #9B59B6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 12px 0 0;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        
+        .apresentacao-container h2 { 
+            color: #2C3E50;
+            margin-bottom: 12px;
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+        
+        .apresentacao-container p { 
+            color: #60738A;
+            text-align: center;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+        
+        .tab-btns { 
+            display: flex;
+            gap: 12px;
+            margin-bottom: 2rem;
+            background: rgba(225,232,237,0.5);
+            padding: 6px;
+            border-radius: 12px;
+        }
+        
+        .tab-btn { 
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            color: #60738A;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+        
+        .tab-btn:hover {
+            color: #6B238E;
+        }
+        
+        .tab-btn.active { 
+            background: linear-gradient(135deg, #6B238E, #9B59B6);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(107,35,142,0.3);
+        }
+        
+        .form { 
+            display: none;
+        }
+        
+        .form.active { 
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .form-group { 
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label { 
+            display: block;
+            margin-bottom: 8px;
+            color: #2C3E50;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        
+        .form-group input { 
+            width: 100%;
+            padding: 13px 16px;
+            border: 2px solid #E1E8ED;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #6B238E;
+            box-shadow: 0 0 0 4px rgba(107,35,142,0.1);
+        }
+        
+        .form-actions { 
+            text-align: center;
+            margin-top: 2rem;
+        }
+        
+        .form-actions button { 
+            background: linear-gradient(135deg, #6B238E, #9B59B6);
+            color: #fff;
+            border: none;
+            padding: 14px 40px;
+            border-radius: 10px;
+            font-size: 1.05rem;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(107,35,142,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .form-actions button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .form-actions button:hover::before {
+            left: 100%;
+        }
+        
+        .form-actions button:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(107,35,142,0.4);
+        }
+        
+        .form-actions button:active {
+            transform: translateY(0);
+        }
+        
+        .msg { 
+            color: #E74C3C;
+            text-align: center;
+            margin-top: 1rem;
+            font-weight: 500;
+            padding: 12px;
+            border-radius: 8px;
+            background: rgba(231,76,60,0.05);
+            display: none;
+        }
+        
+        .msg:not(:empty) {
+            display: block;
+        }
+        
+        .msg.success {
+            color: #27AE60;
+            background: rgba(39,174,96,0.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="apresentacao-container">
+        <div class="logo">
+            <i class="fas fa-seedling"></i>
+            <h1>Açaí Seguro</h1>
+        </div>
+        <h2>Bem-vindo ao sistema!</h2>
+        <p>Gestão sanitária e certificação para batedores de açaí. Faça login ou cadastre-se para acessar as funcionalidades.</p>
+        <div class="tab-btns">
+            <button class="tab-btn active" id="btnLogin">Login</button>
+            <button class="tab-btn" id="btnCadastro">Cadastro</button>
+        </div>
+        <form id="formLogin" class="form active">
+            <div class="form-group">
+                <label for="loginEmail">E-mail</label>
+                <input type="email" id="loginEmail" required autocomplete="username">
+            </div>
+            <div class="form-group">
+                <label for="loginSenha">Senha</label>
+                <input type="password" id="loginSenha" required autocomplete="current-password">
+            </div>
+            <div class="form-actions">
+                <button type="submit">Entrar</button>
+            </div>
+            <div class="msg" id="loginMsg"></div>
+        </form>
+        <form id="formCadastro" class="form">
+            <div class="form-group">
+                <label for="cadastroEmail">E-mail</label>
+                <input type="email" id="cadastroEmail" required autocomplete="username">
+            </div>
+            <div class="form-group">
+                <label for="cadastroSenha">Senha</label>
+                <input type="password" id="cadastroSenha" required autocomplete="new-password">
+            </div>
+            <div class="form-group">
+                <label for="cadastroNome">Nome Completo</label>
+                <input type="text" id="cadastroNome" required>
+            </div>
+            <div class="form-actions">
+                <button type="submit">Cadastrar</button>
+            </div>
+            <div class="msg" id="cadastroMsg"></div>
+        </form>
+    </div>
+    <script>
+        // Alternância entre abas
+        const btnLogin = document.getElementById('btnLogin');
+        const btnCadastro = document.getElementById('btnCadastro');
+        const formLogin = document.getElementById('formLogin');
+        const formCadastro = document.getElementById('formCadastro');
+        btnLogin.onclick = () => {
+            btnLogin.classList.add('active');
+            btnCadastro.classList.remove('active');
+            formLogin.classList.add('active');
+            formCadastro.classList.remove('active');
+        };
+        btnCadastro.onclick = () => {
+            btnCadastro.classList.add('active');
+            btnLogin.classList.remove('active');
+            formCadastro.classList.add('active');
+            formLogin.classList.remove('active');
+        };
+        const API_BASE = 'http://localhost:3000/api';
+
+        function setMsg(el, texto, tipo) {
+            el.textContent = texto;
+            el.className = tipo === 'ok' ? 'msg success' : 'msg';
+        }
+
+        // LOGIN REAL
+        formLogin.onsubmit = async function(e) {
+            e.preventDefault();
+            const email = loginEmail.value.trim();
+            const senha = loginSenha.value;
+            const msgEl = document.getElementById('loginMsg');
+            if (!email || !senha) { setMsg(msgEl, 'Preencha todos os campos.', 'erro'); return; }
+            msgEl.textContent = 'Aguarde...';
+            try {
+                const resp = await fetch(API_BASE + '/usuario/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, senha })
+                });
+                const data = await resp.json();
+                if (resp.ok && data.success) {
+                    // Salvar dados do usuário logado
+                    localStorage.setItem('usuario', JSON.stringify(data.data));
+
+                    // Tentar recuperar cadastro do batedor vinculado e salvar CPF
+                    try {
+                        const respCad = await fetch(API_BASE + '/meu-cadastro/' + data.data.id);
+                        const dataCad = await respCad.json();
+                        if (dataCad.success && dataCad.data) {
+                            localStorage.setItem('userCPF', dataCad.data.cpf);
+                            localStorage.setItem('cadastro', JSON.stringify(dataCad.data));
+                        }
+                    } catch (e) { /* servidor offline, segue sem cache */ }
+
+                    setMsg(msgEl, 'Login realizado! Redirecionando...', 'ok');
+                    setTimeout(() => { window.location.href = 'index.html'; }, 1000);
+                } else {
+                    setMsg(msgEl, data.error || 'Erro ao fazer login.', 'erro');
+                }
+            } catch (err) {
+                setMsg(msgEl, 'Não foi possível conectar ao servidor.', 'erro');
+            }
+        };
+
+        // CADASTRO REAL
+        formCadastro.onsubmit = async function(e) {
+            e.preventDefault();
+            const email = cadastroEmail.value.trim();
+            const senha = cadastroSenha.value;
+            const nome = cadastroNome.value.trim();
+            const msgEl = document.getElementById('cadastroMsg');
+            if (!email || !senha || !nome) { setMsg(msgEl, 'Preencha todos os campos.', 'erro'); return; }
+            msgEl.textContent = 'Aguarde...';
+            try {
+                const resp = await fetch(API_BASE + '/usuario/cadastro', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nome, email, senha })
+                });
+                const data = await resp.json();
+                if (resp.ok && data.success) {
+                    setMsg(msgEl, 'Cadastro realizado com sucesso! Faça o login.', 'ok');
+                    formCadastro.reset();
+                    setTimeout(() => {
+                        btnLogin.click();
+                        document.getElementById('loginMsg').textContent = '';
+                    }, 1500);
+                } else {
+                    setMsg(msgEl, data.error || 'Erro ao cadastrar.', 'erro');
+                }
+            } catch (err) {
+                setMsg(msgEl, 'Não foi possível conectar ao servidor.', 'erro');
+            }
+        };
+    </script>
+</body>
+</html>

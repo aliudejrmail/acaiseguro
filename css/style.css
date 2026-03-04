@@ -1,0 +1,99 @@
+/* style.css - Estilos básicos para tela inicial, login e cadastro */
+body {
+    background: #f7f7fa;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+.apresentacao-container {
+    max-width: 400px;
+    margin: 60px auto;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px #0001;
+    padding: 32px;
+}
+.logo {
+    text-align: center;
+    margin-bottom: 24px;
+}
+.logo i {
+    font-size: 48px;
+    color: #6d2c91;
+}
+.logo h1 {
+    font-size: 2rem;
+    color: #6d2c91;
+    margin: 8px 0 0;
+}
+.apresentacao-container h2 {
+    color: #6d2c91;
+    margin-bottom: 16px;
+    text-align: center;
+}
+.apresentacao-container p {
+    color: #444;
+    text-align: center;
+    margin-bottom: 24px;
+}
+.tab-btns {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+.tab-btn {
+    background: #eee;
+    border: none;
+    padding: 8px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    color: #6d2c91;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+.tab-btn.active {
+    background: #6d2c91;
+    color: #fff;
+}
+.form {
+    display: none;
+}
+.form.active {
+    display: block;
+}
+.form-group {
+    margin-bottom: 16px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    color: #6d2c91;
+    font-weight: 500;
+}
+.form-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+.form-actions {
+    text-align: center;
+}
+.form-actions button {
+    background: #6d2c91;
+    color: #fff;
+    border: none;
+    padding: 10px 32px;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: bold;
+}
+.form-actions button:hover {
+    background: #4b1c66;
+}
+.msg {
+    color: #d32f2f;
+    text-align: center;
+    margin-bottom: 12px;
+}

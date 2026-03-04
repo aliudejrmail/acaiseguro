@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Açaí Seguro - Gestão de Qualidade Sanitária</title>
+    <link rel="stylesheet" href="css/styles.css?v=6">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-leaf"></i>
+                <h1>Açaí Seguro</h1>
+            </div>
+            <nav>
+                <button class="btn-perfil" onclick="showPage('perfil')">
+                    <i class="fas fa-user"></i> Meu Perfil
+                </button>
+                <button class="btn-perfil" onclick="fazerLogout()" style="margin-left:8px; background:#95a5a6;">
+                    <i class="fas fa-sign-out-alt"></i> Sair
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Página Inicial -->
+        <div id="home" class="page active">
+            <!-- Banner: completar cadastro -->
+            <div id="banner-cadastro" style="display:none; background:#fff3cd; border:1.5px solid #ffc107; border-radius:10px; padding:16px 20px; margin-bottom:20px; align-items:center; gap:14px;">
+                <i class="fas fa-exclamation-circle" style="font-size:1.8rem; color:#e67e00; flex-shrink:0;"></i>
+                <div style="flex:1;">
+                    <strong style="color:#7a4700;">Cadastro incompleto</strong>
+                    <p style="margin:4px 0 0; color:#55400a; font-size:0.95rem;">Complete seu cadastro para acessar todas as funcionalidades do sistema.</p>
+                </div>
+                <button onclick="showPage('cadastro')" style="background:#e67e00; color:#fff; border:none; border-radius:7px; padding:9px 18px; font-weight:bold; cursor:pointer; white-space:nowrap;">
+                    <i class="fas fa-user-plus"></i> Completar Cadastro
+                </button>
+            </div>
+
+            <section class="hero">
+                <h2>Bem-vindo ao Açaí Seguro</h2>
+                <p class="subtitle">Sistema de gestão para batedores de açaí artesanal</p>
+                <p>Garantindo segurança alimentar e prevenindo a doença de Chagas</p>
+            </section>
+
+            <section class="modulos-grid">
+                <div class="modulo-card" id="card-cadastro" onclick="showPage('cadastro')">
+                    <i class="fas fa-user-plus" id="card-cadastro-icon"></i>
+                    <h3 id="card-cadastro-titulo">Cadastro</h3>
+                    <p id="card-cadastro-desc">Registre seus dados e estabelecimento</p>
+                </div>
+
+                <div class="modulo-card" onclick="showPage('calculadora')">
+                    <i class="fas fa-calculator"></i>
+                    <h3>Calculadora de Cloração</h3>
+                    <p>Calcule a quantidade exata de cloro</p>
+                </div>
+
+                <div class="modulo-card" onclick="showPage('etapas')">
+                    <i class="fas fa-tasks"></i>
+                    <h3>Etapas de Processamento</h3>
+                    <p>Guia passo a passo completo</p>
+                </div>
+
+                <div class="modulo-card" onclick="showPage('equipamentos')">
+                    <i class="fas fa-tools"></i>
+                    <h3>Equipamentos</h3>
+                    <p>Utensílios necessários e adequados</p>
+                </div>
+
+                <div class="modulo-card" onclick="showPage('checklist')">
+                    <i class="fas fa-clipboard-check"></i>
+                    <h3>Check-list BPF</h3>
+                    <p>Boas Práticas de Fabricação diárias</p>
+                </div>
+
+                <div class="modulo-card" onclick="showPage('selos')">
+                    <i class="fas fa-award"></i>
+                    <h3>Meus Selos</h3>
+                    <p>Certificações e conquistas</p>
+                </div>
+            </section>
+        </div>
+
+        <!-- Página de Perfil -->
+        <div id="perfil" class="page">
+            <button class="btn-back" onclick="showPage('home')">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </button>
+            <h2>Meu Perfil</h2>
+            <div class="perfil-info" id="perfilDisplay">
+                <p class="sem-cadastro">Você ainda não completou seu cadastro.</p>
+                <button class="btn-primary" onclick="showPage('cadastro')">Completar Cadastro</button>
+            </div>
+        </div>
+
+        <!-- Módulo 1: Cadastro -->
+        <div id="cadastro" class="page">
+            <button class="btn-back" onclick="showPage('home')">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </button>
+            <h2>Cadastro do Batedor</h2>
+            
+            <form id="formCadastro" class="form-cadastro">
+                <div class="form-section">
+                    <h3><i class="fas fa-user"></i> Dados Pessoais</h3>
+                    <div class="form-group">
+                        <label for="nome">Nome Completo *</label>
+                        <input type="text" id="nome" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cpf">CPF *</label>
+                        <input type="text" id="cpf" maxlength="14" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="telefone">Telefone *</label>
+                        <input type="tel" id="telefone" maxlength="15" required>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3><i class="fas fa-store"></i> Dados do Estabelecimento</h3>
+                    <div class="form-group">
+                        <label for="nomeFantasia">Nome Fantasia *</label>
+                        <input type="text" id="nomeFantasia" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cnpj">CNPJ (se houver)</label>
+                        <input type="text" id="cnpj" maxlength="18">
+                    </div>
+                    <div class="form-group">
+                        <label for="endereco">Endereço Completo *</label>
+                        <input type="text" id="endereco" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="alvara">Alvará Sanitário *</label>
+                        <input type="text" id="alvara" required>
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn-secondary" onclick="getLocation()">
+                            <i class="fas fa-map-marker-alt"></i> Obter Localização
+                        </button>
+                        <span id="localizacao" class="text-muted"></span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary btn-large">
+                    <i class="fas fa-save"></i> Salvar Cadastro
+                </button>
+            </form>
+        </div>
+
+        <!-- Módulo 2: Calculadora de Cloração -->
+        <div id="calculadora" class="page">
+            <button class="btn-back" onclick="showPage('home')">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </button>
+            <h2>Calculadora de Higienização</h2>
+            <p class="info-text">
+                <i class="fas fa-info-circle"></i> 
+                A cloração adequada é essencial para eliminar microrganismos e garantir a segurança do açaí.
+            </p>
+
+            <form id="formCalculadora" class="form-calculadora">
+                <div class="form-group">
+                    <label for="quantidadeAgua">Quantidade de água no tanque (litros) *</label>
+                    <input type="number" id="quantidadeAgua" step="0.1" min="0.1" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="concentracaoCloro">Concentração de cloro ativo do produto (%) *</label>
+                    <select id="concentracaoCloro" required>
+                        <option value="">Selecione...</option>
+                        <option value="2.0">2,0%</option>
+                        <option value="2.5">2,5%</option>
+                        <option value="10">10%</option>
+                        <option value="12">12%</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-primary btn-large">
+                    <i class="fas fa-calculator"></i> Calcular
+                </button>
+            </form>
+
+            <div id="resultadoCalculadora" class="resultado-box" style="display: none;">
+                <h3>Resultado do Cálculo</h3>
+                <div class="resultado-destaque">
+                    <p><strong>Quantidade de hipoclorito necessária:</strong></p>
+                    <p class="valor-grande" id="quantidadeCloro"></p>
+                </div>
+                <div class="instrucoes">
+                    <h4><i class="fas fa-clock"></i> Tempo de Imersão</h4>
+                    <p id="tempoImersao"></p>
+                    <h4><i class="fas fa-list-ol"></i> Instruções</h4>
+                    <ol>
+                        <li>Adicione a quantidade calculada de hipoclorito na água</li>
+                        <li>Mergulhe os frutos do açaí completamente</li>
+                        <li>Aguarde o tempo de imersão indicado</li>
+                        <li>Enxágue bem com água potável</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <!-- Módulo 3: Etapas do Processamento -->
+        <div id="etapas" class="page">
+            <button class="btn-back" onclick="showPage('home')">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </button>
+            <h2>Etapas do Processamento</h2>
+            
+            <div class="etapas-container">
+                <div class="etapa">
+                    <div class="etapa-numero">1</div>
+                    <div class="etapa-conteudo">
+                        <h3><i class="fas fa-box-open"></i> Recebimento</h3>
+                        <p>Receba os frutos do açaí de fornecedores confiáveis. Verifique a qualidade, ausência de sujidades visíveis e se estão em bom estado de conservação.</p>
+                        <ul>
+                            <li>Verificar procedência</li>
+                            <li>Observar integridade dos frutos</li>
+                            <li>Rejeitar lotes com sinais de deterioração</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="etapa">
+                    <div class="etapa-numero">2</div>
+                    <div class="etapa-conteudo">
+                        <h3><i class="fas fa-hand-paper"></i> Seleção/Catação</h3>
+                        <p>Remova manualmente os frutos danificados, verdes, com sinais de contaminação ou presença de insetos.</p>
+                        <ul>
+                            <li>Use luvas descartáveis</li>
+                            <li>Descarte frutos impróprios</li>
+                            <li>Trabalhe em superfície limpa</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="etapa">
+                    <div class="etapa-numero">3</div>
+                    <div class="etapa-conteudo">
+                        <h3><i class="fas fa-shower"></i> Lavagem Prévia</h3>
+                        <p>Lave os frutos em água corrente potável para remover sujidades grosseiras, folhas e impurezas.</p>
+                        <ul>
+                            <li>Use água potável corrente</li>
+                            <li>Esfregue suavemente os frutos</li>
+                            <li>Troque a água se necessário</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="etapa etapa-critica">
+                    <div class="etapa-numero">4</div>
+                    <div class="etapa-conteudo">
+                        <h3><i class="fas fa-flask"></i> Desinfecção (Cloração)</h3>
+                        <p class="text-critico"><strong>ETAPA CRÍTICA!</strong> Imersão dos frutos em solução clorada para eliminação de microrganismos.</p>
+                        <ul>
+                            <li>Use a calculadora para dosar corretamente o cloro</li>
+                            <li>Concentração ideal: 100-200 ppm de cloro livre</li>
+                            <li>Tempo de contato: 15 minutos</li>
+                            <li>Mergulhe completamente todos os frutos</li>
+                        </ul>
+                        <button class="btn-secondary" onclick="showPage('calculadora')">
+                            <i class="fas fa-calculator"></i> Ir para Calculadora
+                        </button>
+                    </div>
+                </div>
+
+                <div class="etapa">
+                    <div class="etapa-numero">5</div>
+                    <div class="etapa-conteudo">
+                        <h3><i class="fas fa-tint"></i> Enxágue</h3>
+                        <p>Enxágue abundantemente os frutos com água potável para remover resíduos de cloro.</p>
+                        <ul>
+                            <li>Use água potável corrente</li>
+                            <li>Enxágue por pelo menos 3 minutos</li>
+                            <li>Drene completamente a água</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="etapa etapa-critica">
+                    <div class="etapa-numero">6</div>
+                    <div class="etapa-conteudo">
+                        <h3><i class="fas fa-thermometer-half"></i> Branqueamento (Choque Térmico)</h3>
+                        <p class="text-critico"><strong>ETAPA CRÍTICA!</strong> Essencial para inativar o protozoário causador da doença de Chagas.</p>
+                        <ul>
+                            <li>Aqueça água até 80°C</li>
+                            <li>Mergulhe os frutos por exatamente 10 segundos</li>
+                            <li>Use termômetro para controlar a temperatura</li>
+                            <li>Resfrie imediatamente em água gelada</li>
+                        </ul>
+                        <button class="btn-secondary" onclick="startTimer(10)">
+                            <i class="fas fa-stopwatch"></i> Iniciar Cronômetro (10s)
+                        </button>
+                        <div id="timerDisplay" class="timer-display" style="display: none;"></div>
+                    </div>
+                </div>
+
+                <div class="etapa">
+                    <div class="etapa-numero">7</div>
+                    <div class="etapa-conteudo">
+                        <h3><i class="fas fa-blender"></i> Despolpamento</h3>
+                        <p>Processe os frutos na despolpadeira para obter a polpa de açaí.</p>
+                        <ul>
+                            <li>Use despolpadeira em aço inoxidável</li>
+                            <li>Equipamento deve estar limpo e sanitizado</li>
+                            <li>Adicione água potável conforme necessário</li>
+                            <li>Obtenha a consistência desejada (grosso, médio ou fino)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="etapa">
+                    <div class="etapa-numero">8</div>
+                    <div class="etapa-conteudo">
+                        <h3><i class="fas fa-box"></i> Envase</h3>
+                        <p>Acondicione a polpa de açaí em embalagens adequadas e higienizadas.</p>
+                        <ul>
+                            <li>Use embalagens próprias para alimentos</li>
+                            <li>Identifique com data de produção e validade</li>
+                            <li>Armazene imediatamente sob refrigeração (até -18°C se congelado)</li>
+                            <li>Registre o lote produzido</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Módulo 4: Equipamentos -->
+        <div id="equipamentos" class="page">
+            <button class="btn-back" onclick="showPage('home')">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </button>
+            <h2>Equipamentos e Utensílios</h2>
+            
+            <div class="equipamentos-grid">
+                <div class="equipamento-card">
+                    <i class="fas fa-blender-phone"></i>
+                    <h3>Despolpadeira</h3>
+                    <ul>
+                        <li>Preferência: aço inoxidável</li>
+                        <li>Fácil limpeza e sanitização</li>
+                        <li>Capacidade adequada à produção</li>
+                    </ul>
+                </div>
+
+                <div class="equipamento-card">
+                    <i class="fas fa-bath"></i>
+                    <h3>Tanques de Lavagem</h3>
+                    <ul>
+                        <li>Aço inoxidável ou plástico alimentício</li>
+                        <li>Mínimo 2 tanques (lavagem e cloração)</li>
+                        <li>Capacidade para imersão completa</li>
+                    </ul>
+                </div>
+
+                <div class="equipamento-card">
+                    <i class="fas fa-shopping-basket"></i>
+                    <h3>Cestos Perfurados</h3>
+                    <ul>
+                        <li>Plástico alimentício ou inox</li>
+                        <li>Para drenagem adequada</li>
+                        <li>Fácil higienização</li>
+                    </ul>
+                </div>
+
+                <div class="equipamento-card">
+                    <i class="fas fa-thermometer-three-quarters"></i>
+                    <h3>Termômetro</h3>
+                    <ul>
+                        <li>Alcance de 0°C a 100°C</li>
+                        <li>Digital ou analógico calibrado</li>
+                        <li>Essencial para o branqueamento</li>
+                    </ul>
+                </div>
+
+                <div class="equipamento-card">
+                    <i class="fas fa-stopwatch"></i>
+                    <h3>Cronômetro</h3>
+                    <ul>
+                        <li>Para controle do tempo de cloração</li>
+                        <li>Para controle do branqueamento</li>
+                        <li>Pode usar o cronômetro deste aplicativo</li>
+                    </ul>
+                </div>
+
+                <div class="equipamento-card">
+                    <i class="fas fa-snowflake"></i>
+                    <h3>Freezer</h3>
+                    <ul>
+                        <li>Temperatura -18°C ou inferior</li>
+                        <li>Capacidade adequada</li>
+                        <li>Termômetro visível</li>
+                    </ul>
+                </div>
+
+                <div class="equipamento-card">
+                    <i class="fas fa-user-shield"></i>
+                    <h3>EPIs</h3>
+                    <ul>
+                        <li>Avental impermeável</li>
+                        <li>Touca ou gorro descartável</li>
+                        <li>Botas de borracha branca</li>
+                        <li>Luvas descartáveis</li>
+                        <li>Máscara facial</li>
+                    </ul>
+                </div>
+
+                <div class="equipamento-card">
+                    <i class="fas fa-spray-can"></i>
+                    <h3>Produtos de Limpeza</h3>
+                    <ul>
+                        <li>Hipoclorito de sódio</li>
+                        <li>Detergente neutro</li>
+                        <li>Álcool 70%</li>
+                        <li>Esponjas e panos exclusivos</li>
+                    </ul>
+                </div>
+
+                <div class="equipamento-card">
+                    <i class="fas fa-box-open"></i>
+                    <h3>Embalagens</h3>
+                    <ul>
+                        <li>Sacos plásticos próprios para alimentos</li>
+                        <li>Potes plásticos com tampa</li>
+                        <li>Material resistente ao congelamento</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Módulo 5: Check-list BPF -->
+        <div id="checklist" class="page">
+            <button class="btn-back" onclick="showPage('home')">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </button>
+            <h2>Check-list de Boas Práticas</h2>
+            <p class="info-text">
+                <i class="fas fa-info-circle"></i> 
+                Preencha este check-list diariamente antes de iniciar a produção
+            </p>
+
+            <div id="avisoChecklistDiario" class="alert alert-success" style="display: none;">
+                <i class="fas fa-check-circle"></i>
+                <strong>Check-list de hoje já foi preenchido!</strong>
+                <p>Você já preencheu o check-list de hoje. Volte amanhã para continuar suas práticas diárias.</p>
+                <p><small>Lembre-se: o check-list deve ser preenchido por 7 dias consecutivos para obter o Selo Prata.</small></p>
+            </div>
+
+            <form id="formChecklist">
+                <div class="checklist-section">
+                    <h3><i class="fas fa-user-check"></i> Higiene do Manipulador</h3>
+                    <div class="checklist-item">
+                        <label>
+                            <input type="checkbox" name="higiene" value="1">
+                            Unhas curtas, limpas e sem esmalte
+                        </label>
+                    </div>
+                    <div class="checklist-item">
+                        <label>
+                            <input type="checkbox" name="higiene" value="2">
+                            Ausência de adornos (anéis, pulseiras, relógios)
+                        </label>
+                    </div>
+                    <div class="checklist-item">
+                        <label>
+                            <input type="checkbox" name="higiene" value="3">
+                            Uniformizado com avental limpo e touca
+                        </label>
+                    </div>
+                    <div class="checklist-item">
+                        <label>
+                            <input type="checkbox" name="higiene" value="4">
+                            Mãos lavadas e sanitizadas
+                        </label>
+                    </div>
+                    <div class="checklist-item">
+                        <label>
+                            <input type="checkbox" name="higiene" value="5">
+                            Ausência de ferimentos ou doenças
+                        </label>
+                    </div>
+                </div>
+
+                <div class="checklist-section">
+                    <h3><i class="fas fa-broom"></i> Limpeza do Ambiente</h3>
+                    <div class="checklist-item">
+                        <label>
+                            <input type="checkbox" name="ambiente" value="1">
+                            Piso limpo e seco
+                        </label>
+                    </div>
+                    <div class="checklist-item">
+                        <label>
+                            <input type="checkbox" name="ambiente" value="2">
+                            Paredes e teto sem sujidades
+                        </label>
+                    </div>
+                    <div class="checklist-item">
+                        <label>
+                            <input type="checkbox" name="ambiente" value="3">
+                            Bancadas e superfícies sanitizadas
+                        </label>
+                    </div>
+                    <div class="checklist-item">
+                        <label>
+                            <input type="checkbox" name="ambiente" value="4">
+                            Lixeiras com tampa e saco plástico
+                        </label>
+                    </div>
+                    <div class="checklist-item">
+                        <label>
+                            <input type="checkbox" name="ambiente" value="5">
+                            Iluminação adequada
+                        </label>
+                    </div>
+                    <div class="checklist-item">
+                        <label>
+                            <input type="checkbox" name="ambiente" value="6">
+                            Ventilação adequada
+                        </label>
+                    </div>
+                </div>
+
+                <div class="checklist-section">
+                    <h3><i class="fas fa-bug"></i> Controle de Pragas</h3>
+                    <div class="checklist-item">
+                        <label>
+                            <input type="checkbox" name="pragas" value="1">
+                            Ausência de insetos voadores
+                        </label>
+                    </div>
+                    <div class="checklist-item">
+                        <label>
+                            <input type="checkbox" name="pragas" value="2">
+                            Ausência de roedores
+                        </label>
+                    </div>
+                    <div class="checklist-item">
+                        <label>
+                            <input type="checkbox" name="pragas" value="3">
+                            Telas em janelas e aberturas
+                        </label>
+                    </div>
+                    <div class="checklist-item">
+                        <label>
+                            <input type="checkbox" name="pragas" value="4">
+                            Ralos com tampas ou telas
+                        </label>
+                    </div>
+                </div>
+
+                <div class="checklist-section">
+                    <h3><i class="fas fa-tint"></i> Qualidade da Água</h3>
+                    <div class="checklist-item">
+                        <label>
+                            <input type="checkbox" name="agua" value="1">
+                            Água potável disponível
+                        </label>
+                    </div>
+                    <div class="checklist-item">
+                        <label>
+                            <input type="checkbox" name="agua" value="2">
+                            Reservatório limpo (se houver)
+                        </label>
+                    </div>
+                    <div class="checklist-item">
+                        <label>
+                            <input type="checkbox" name="agua" value="3">
+                            Análise da água em dia (últimos 6 meses)
+                        </label>
+                    </div>
+                </div>
+
+                <div class="checklist-section">
+                    <h3><i class="fas fa-wrench"></i> Manutenção dos Equipamentos</h3>
+                    <div class="checklist-item">
+                        <label>
+                            <input type="checkbox" name="equipamentos" value="1">
+                            Equipamentos limpos e sanitizados
+                        </label>
+                    </div>
+                    <div class="checklist-item">
+                        <label>
+                            <input type="checkbox" name="equipamentos" value="2">
+                            Equipamentos em bom estado de funcionamento
+                        </label>
+                    </div>
+                    <div class="checklist-item">
+                        <label>
+                            <input type="checkbox" name="equipamentos" value="3">
+                            Freezer na temperatura adequada (-18°C)
+                        </label>
+                    </div>
+                    <div class="checklist-item">
+                        <label>
+                            <input type="checkbox" name="equipamentos" value="4">
+                            Utensílios organizados e protegidos
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="observacoes">Observações (opcional)</label>
+                    <textarea id="observacoes" rows="4"></textarea>
+                </div>
+
+                <button type="submit" class="btn-primary btn-large">
+                    <i class="fas fa-save"></i> Salvar Check-list
+                </button>
+            </form>
+
+            <div class="historico-checklist">
+                <h3>Histórico</h3>
+                <div id="historicoLista">
+                    <p class="text-muted">Nenhum check-list salvo ainda.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Módulo 6: Sistema de Selos -->
+        <div id="selos" class="page">
+            <button class="btn-back" onclick="showPage('home')">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </button>
+            <h2>Sistema de Certificação</h2>
+            <p class="info-text">
+                <i class="fas fa-info-circle"></i> 
+                Os selos certificam seu comprometimento com a qualidade e segurança alimentar
+            </p>
+
+            <div class="status-selos">
+                <div class="meu-selo" id="meuSeloDisplay">
+                    <p class="text-muted">Complete os requisitos para obter sua certificação</p>
+                </div>
+            </div>
+
+            <div class="requisitos-container">
+                <div class="requisitos-section">
+                    <h3><i class="fas fa-certificate" style="color: #C0C0C0;"></i> Selo Prata</h3>
+                    <p class="selo-descricao">Certificação básica - válida por 1 ano</p>
+                    <ul class="requisitos-lista" id="requisitosPrata">
+                        <li class="requisito" data-completo="false">
+                            <i class="fas fa-circle"></i>
+                            <span>Cadastro completo no sistema</span>
+                        </li>
+                        <li class="requisito" data-completo="false">
+                            <i class="fas fa-circle"></i>
+                            <span>Alvará sanitário vigente</span>
+                        </li>
+                        <li class="requisito" data-completo="false">
+                            <i class="fas fa-circle"></i>
+                            <span>Espaço adequado (separado e identificado)</span>
+                        </li>
+                        <li class="requisito" data-completo="false">
+                            <i class="fas fa-circle"></i>
+                            <span>Check-list BPF preenchido por 7 dias consecutivos</span>
+                        </li>
+                        <li class="requisito" data-completo="false">
+                            <i class="fas fa-circle"></i>
+                            <span>Processamento correto (todas as etapas)</span>
+                        </li>
+                    </ul>
+                    <div class="progresso-selo">
+                        <div class="progresso-barra">
+                            <div class="progresso-preenchido" id="progressoPrata" style="width: 0%"></div>
+                        </div>
+                        <span class="progresso-texto" id="textoPrata">0% completo</span>
+                    </div>
+                </div>
+
+                <div class="requisitos-section">
+                    <h3><i class="fas fa-certificate" style="color: #FFD700;"></i> Selo Ouro</h3>
+                    <p class="selo-descricao">Certificação avançada - válida por 1 ano</p>
+                    <p class="prerequisito"><em>Pré-requisito: Selo Prata ativo</em></p>
+                    <ul class="requisitos-lista" id="requisitosOuro">
+                        <li class="requisito" data-completo="false">
+                            <i class="fas fa-circle"></i>
+                            <span>Possui Selo Prata vigente</span>
+                        </li>
+                        <li class="requisito" data-completo="false">
+                            <i class="fas fa-circle"></i>
+                            <span>Equipamentos adequados (conforme lista do app)</span>
+                        </li>
+                        <li class="requisito" data-completo="false">
+                            <i class="fas fa-circle"></i>
+                            <span>Processamento correto (todas as etapas)</span>
+                        </li>
+                        <li class="requisito" data-completo="false">
+                            <i class="fas fa-circle"></i>
+                            <span>Check-list BPF preenchido por 30 dias consecutivos</span>
+                        </li>
+                        <li class="requisito" data-completo="false">
+                            <i class="fas fa-circle"></i>
+                            <span>Análise da água realizada (últimos 6 meses)</span>
+                        </li>
+                        <li class="requisito" data-completo="false">
+                            <i class="fas fa-circle"></i>
+                            <span>Planilhas de registro de produtos (resfriados/congelados)</span>
+                        </li>
+                        <li class="requisito" data-completo="false">
+                            <i class="fas fa-circle"></i>
+                            <span>Gestão adequada de resíduos</span>
+                        </li>
+                        <li class="requisito" data-completo="false">
+                            <i class="fas fa-circle"></i>
+                            <span>Documentação vigente e organizada</span>
+                        </li>
+                    </ul>
+                    <div class="progresso-selo">
+                        <div class="progresso-barra">
+                            <div class="progresso-preenchido" id="progressoOuro" style="width: 0%"></div>
+                        </div>
+                        <span class="progresso-texto" id="textoOuro">0% completo</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-incentivo">
+                <h3><i class="fas fa-hand-holding-usd"></i> Incentivos e Auxílios</h3>
+                <p>Batedores certificados podem ter acesso a:</p>
+                <ul>
+                    <li>Programas de financiamento para aquisição de equipamentos</li>
+                    <li>Descontos em produtos de higienização</li>
+                    <li>Assistência técnica gratuita da vigilância sanitária</li>
+                    <li>Prioridade em editais e programas governamentais</li>
+                    <li>Divulgação oficial como estabelecimento certificado</li>
+                </ul>
+                <p class="text-muted">Consulte a vigilância sanitária do seu município para mais informações.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Açaí Seguro - Sistema de Gestão de Qualidade Sanitária</p>
+            <p>Desenvolvido para a segurança alimentar e saúde pública</p>
+        </div>
+    </footer>
+
+    <!-- Modal de Cronômetro -->
+    <div id="timerModal" class="modal">
+        <div class="modal-content">
+            <h3>Cronômetro de Branqueamento</h3>
+            <div class="timer-digital" id="timerDigital">10</div>
+            <div class="timer-controls">
+                <button id="timerBtn" class="btn-primary btn-large" onclick="toggleTimer()">
+                    <i class="fas fa-play"></i> Iniciar
+                </button>
+                <button class="btn-secondary" onclick="closeTimer()">
+                    <i class="fas fa-times"></i> Fechar
+                </button>
+            </div>
+            <div class="timer-alert" id="timerAlert" style="display: none;">
+                <i class="fas fa-bell"></i> TEMPO FINALIZADO! Retire os frutos imediatamente!
+            </div>
+        </div>
+    </div>
+
+    <script src="js/database.js?v=4"></script>
+    <script src="js/app.js?v=4"></script>
+</body>
+</html>
