@@ -56,6 +56,18 @@ async function verificarUsuarios() {
             console.log(`   Role: ${gestor.rows[0].role}`);
         }
         
+        // garantir existência de pelo menos um batedor
+        const batedorExist = await pool.query("SELECT * FROM usuarios WHERE email = 'batedor@acaiseguro.com'");
+        if (batedorExist.rows.length === 0) {
+            const bcrypt = require('./server/node_modules/bcryptjs');
+            const hash2 = await bcrypt.hash('batedor123', 10);
+            await pool.query(
+                "INSERT INTO usuarios (nome, email, senha, role) VALUES ($1, $2, $3, $4)",
+                ['Batedor Exemplo', 'batedor@acaiseguro.com', hash2, 'batedor']
+            );
+            console.log('✅ Usuário batedor criado para testes: batedor@acaiseguro.com / batedor123');
+        }
+        
         await pool.end();
         process.exit(0);
     } catch (error) {

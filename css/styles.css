@@ -46,6 +46,18 @@ header {
     backdrop-filter: blur(10px);
 }
 
+/* Ensure logo text/icon are visible and use the standard size */
+header .logo {
+    color: white !important;
+    opacity: 1 !important;
+}
+
+header .logo h1 {
+    color: white !important;
+    font-size: var(--font-size-xl) !important;
+    font-weight: 700 !important;
+}
+
 .header-content {
     display: flex;
     justify-content: space-between;
@@ -266,22 +278,46 @@ main {
     box-shadow: var(--shadow);
 }
 
-.btn-secondary {
-    background: linear-gradient(135deg, var(--accent-color), #229954);
-    color: white;
+/* estilos equivalentes aos usados em gestor.html */
+.btn-primario,
+.btn-secundario {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
     border: none;
-    padding: 13px 28px;
-    border-radius: 10px;
-    cursor: pointer;
+    border-radius: 0.5rem;
+    font-weight: 600;
     font-size: 1rem;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
 }
 
-.btn-secondary:hover {
+.btn-primario {
+    background: var(--primary-color);
+    color: white;
+}
+
+.btn-primario:hover:not(:disabled) {
+    background: var(--secondary-color);
     transform: translateY(-2px);
     box-shadow: var(--shadow);
+}
+
+.btn-primario:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-secundario {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.btn-secundario:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.3);
 }
 
 .btn-large {
@@ -1792,31 +1828,88 @@ main {
 }
 
 /* Modal */
-.modal {
+.modal-overlay {
     display: none;
     position: fixed;
-    z-index: 1000;
+    z-index: 2000;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    animation: fadeIn 0.3s;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
 }
 
-.modal-content {
+.modal-overlay.active {
+    display: flex;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal {
     background: white;
-    margin: 10% auto;
-    padding: 2rem;
-    border-radius: 10px;
-    max-width: 500px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 550px;
+    border-radius: 16px;
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    position: relative;
+    animation: slideInUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.modal-content h3 {
+.modal-header {
+    background: var(--light-bg);
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h2 {
     color: var(--primary-color);
-    margin-bottom: 1.5rem;
-    text-align: center;
+    font-size: 1.4rem;
+    margin: 0;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    color: #94a3b8;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.modal-close:hover {
+    color: var(--danger-color);
+}
+
+.modal-body {
+    padding: 2rem;
+}
+
+.modal-footer {
+    padding: 1.5rem 2rem;
+    background: var(--light-bg);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .timer-digital {

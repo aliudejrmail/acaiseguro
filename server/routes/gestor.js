@@ -60,6 +60,139 @@ router.get('/dashboard', async (req, res) => {
     }
 });
 
+// ==================== ROTAS DE USUÁRIOS ====================
+
+// GET - Listar todos os usuários (opcional filtro por role e busca)
+router.get('/usuarios', async (req, res) => {
+    try {
+        const { role, busca } = req.query;
+        let query = 'SELECT id, nome, email, role, criado_em FROM usuarios WHERE 1=1';
+        const params = [];
+        let idx = 1;
+
+        if (role) {
+            query += ` AND role = $${idx}`;
+            params.push(role);
+            idx++;
+        }
+
+        if (busca) {
+            query += ` AND (nome ILIKE $${idx} OR email ILIKE $${idx})`;
+            params.push(`%${busca}%`);
+            idx++;
+        }
+
+        query += ' ORDER BY criado_em DESC';
+        const result = await db.query(query, params);
+        res.json({ success: true, data: result.rows });
+    } catch (error) {
+        console.error('Erro ao listar usuários:', error);
+        res.status(500).json({ error: 'Erro ao listar usuários' });
+    }
+});
+
+// GET - Detalhes de um usuário
+router.get('/usuario/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const result = await db.query('SELECT id, nome, email, role, criado_em FROM usuarios WHERE id = $1', [id]);
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Usuário não encontrado' });
+        }
+        res.json({ success: true, data: result.rows[0] });
+    } catch (error) {
+        console.error('Erro ao buscar usuário:', error);
+        res.status(500).json({ error: 'Erro ao buscar usuário' });
+    }
+});
+
+// POST - Criar usuário (gestor ou batedor)
+router.post('/usuario', async (req, res) => {
+    try {
+        const { nome, email, senha, role } = req.body;
+        if (!nome || !email || !senha || !role) {
+            return res.status(400).json({ error: 'Campos obrigatórios faltando' });
+        }
+        // verificar se já existe
+        const exist = await db.query('SELECT id FROM usuarios WHERE email = $1', [email]);
+        if (exist.rows.length > 0) {
+            return res.status(409).json({ error: 'E-mail já cadastrado' });
+        }
+        const bcrypt = require('bcryptjs');
+        const hash = await bcrypt.hash(senha, 10);
+        const result = await db.query(
+            'INSERT INTO usuarios (nome, email, senha, role) VALUES ($1, $2, $3, $4) RETURNING id, nome, email, role, criado_em',
+            [nome, email, hash, role]
+        );
+        res.status(201).json({ success: true, data: result.rows[0] });
+    } catch (error) {
+        console.error('Erro ao criar usuário:', error);
+        res.status(500).json({ error: 'Erro ao criar usuário' });
+    }
+});
+
+// PUT - Atualizar dados de um usuário
+router.put('/usuario/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { nome, email, role, senha } = req.body;
+        const updates = [];
+        const params = [];
+        let idx = 1;
+
+        if (nome) {
+            updates.push(`nome = $${idx}`);
+            params.push(nome);
+            idx++;
+        }
+        if (email) {
+            updates.push(`email = $${idx}`);
+            params.push(email);
+            idx++;
+        }
+        if (role) {
+            updates.push(`role = $${idx}`);
+            params.push(role);
+            idx++;
+        }
+        if (senha) {
+            const bcrypt = require('bcryptjs');
+            const hash = await bcrypt.hash(senha, 10);
+            updates.push(`senha = $${idx}`);
+            params.push(hash);
+            idx++;
+        }
+        if (updates.length === 0) {
+            return res.status(400).json({ error: 'Nenhum campo para atualizar' });
+        }
+        params.push(id);
+        const query = `UPDATE usuarios SET ${updates.join(', ')} WHERE id = $${idx} RETURNING id, nome, email, role, criado_em`;
+        const result = await db.query(query, params);
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Usuário não encontrado' });
+        }
+        res.json({ success: true, data: result.rows[0] });
+    } catch (error) {
+        console.error('Erro ao atualizar usuário:', error);
+        res.status(500).json({ error: 'Erro ao atualizar usuário' });
+    }
+});
+
+// DELETE - Remover usuário
+router.delete('/usuario/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const result = await db.query('DELETE FROM usuarios WHERE id = $1 RETURNING id', [id]);
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Usuário não encontrado' });
+        }
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Erro ao deletar usuário:', error);
+        res.status(500).json({ error: 'Erro ao deletar usuário' });
+    }
+});
+
 // ==================== ROTAS DE LISTAGEM DE BATEDORES ====================
 
 // GET - Listar todos os batedores com filtros

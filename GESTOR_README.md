@@ -265,6 +265,39 @@ GET /api/gestor/relatorio/conformidade?dataInicio=&dataFim=
 
 ---
 
+### Administração de Usuários
+As gestors agora podem gerenciar contas diretamente pelo painel.
+
+```
+GET /api/gestor/usuarios?role=&busca=
+```
+Lista de usuários; opção de filtrar por `role` ("gestor" ou "batedor") e busca por nome/email.
+
+```
+GET /api/gestor/usuario/:id
+```
+Detalhes de um usuário.
+
+```
+POST /api/gestor/usuario
+Body: { nome, email, senha, role }
+```
+Cria um novo usuário com função especificada.
+
+```
+PUT /api/gestor/usuario/:id
+Body: { nome?, email?, role?, senha? }
+```
+Atualiza campos do usuário; a senha passada será criptografada.
+
+```
+DELETE /api/gestor/usuario/:id
+```
+Remove usuário da base.
+
+
+---
+
 ## 🎨 Interface
 
 ### Design

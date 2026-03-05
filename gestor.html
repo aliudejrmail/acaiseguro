@@ -1299,18 +1299,25 @@
     <!-- Container de Toasts -->
     <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
 
-    <!-- Header -->
-    <header class="header">
-        <div class="header-content">
-            <div class="logo">
-                <i class="fas fa-user-shield" aria-hidden="true"></i>
-                <h1>Painel do Gestor</h1>
-            </div>
-            <div class="header-actions">
-                <span id="gestorNome" aria-label="Nome do gestor"></span>
-                <button class="btn-secundario" aria-label="Sair do sistema">
-                    <i class="fas fa-sign-out-alt" aria-hidden="true"></i> Sair
-                </button>
+    <!-- Header (copied from index for consistency) -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-leaf" aria-hidden="true"></i>
+                    <h1>Painel do Gestor</h1>
+                </div>
+                <nav>
+                    <button class="btn-perfil" aria-label="Nome do gestor">
+                        <span id="gestorNome">&nbsp;</span>
+                    </button>
+                    <a href="usuarios.html" class="btn-perfil" aria-label="Gerenciar usuários">
+                        <i class="fas fa-users-cog" aria-hidden="true"></i> Usuários
+                    </a>
+                    <button class="btn-perfil" aria-label="Sair do sistema">
+                        <i class="fas fa-sign-out-alt" aria-hidden="true"></i> Sair
+                    </button>
+                </nav>
             </div>
         </div>
     </header>

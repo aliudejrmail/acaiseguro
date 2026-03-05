@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administração de Usuários - Açaí Seguro</title>
+    <link rel="stylesheet" href="css/styles.css?v=23">
+    <link rel="stylesheet" href="css/style.css?v=23">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ajustes adicionais específicos */
+        .table-actions button {
+            margin-right: 4px;
+        }
+
+        /* utilitários compartilhados */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Tabela profissional (reuso dos estilos de gestor) */
+        .tabela-section {
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+
+        .tabela-header {
+            padding: 1rem 1.5rem;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tabela-header h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tabela-batedores {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tabela-batedores table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: max-content;
+        }
+
+        .tabela-batedores thead {
+            background: #f7fafc;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .tabela-batedores th {
+            padding: 1rem 1.5rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.75rem;
+            color: #6d6d6d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .tabela-batedores td {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e1e8ed;
+            color: var(--dark-text);
+            vertical-align: middle;
+        }
+
+        .tabela-batedores td[data-label] {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tabela-batedores td[data-label]::before {
+            content: attr(data-label);
+            font-weight: 600;
+            color: #6d6d6d;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            margin-right: 1rem;
+        }
+
+        .tabela-batedores tbody tr {
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+
+        .tabela-batedores tbody tr:hover {
+            background: rgba(107, 35, 142, 0.05);
+        }
+
+        .tabela-batedores tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .actions-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        /* ensure header-content container spacing matches global */
+        header .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .filtro-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .filtro-group label {
+            font-size: 0.75rem;
+            color: #6d6d6d;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .filtro-group input,
+        .filtro-group select {
+            padding: 0.5rem;
+            border: 1px solid #e1e8ed;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: all 0.2s;
+            background: #fff;
+            width: 100%;
+        }
+
+        .filtro-group input:focus,
+        .filtro-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        /* responsividade mobile */
+        @media (max-width: 600px) {
+            .tabela-header {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 1rem;
+            }
+
+            .tabela-batedores thead {
+                display: none;
+            }
+
+            .tabela-batedores tbody tr {
+                display: block;
+                margin-bottom: 1rem;
+                border: 1px solid #e1e8ed;
+                border-radius: 8px;
+                padding: 1rem;
+            }
+
+            .tabela-batedores td {
+                display: flex;
+                justify-content: space-between;
+                padding: 0.5rem 0;
+                border: none;
+                border-bottom: 1px dashed #e1e8ed;
+                font-size: 0.875rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <a href="#main-content" class="skip-link">Pular para conteúdo principal</a>
+    <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+
+    <!-- Header (copied from index for consistency) -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-leaf" aria-hidden="true"></i>
+                    <h1>Gestão de Usuários</h1>
+                </div>
+                <nav>
+                    <button class="btn-perfil" aria-label="Nome do gestor">
+                        <span id="gestorNome">&nbsp;</span>
+                    </button>
+                    <a href="gestor.html" class="btn-perfil" aria-label="Voltar ao painel">
+                        <i class="fas fa-arrow-left" aria-hidden="true"></i> Painel
+                    </a>
+                    <button id="btnLogout" class="btn-perfil" aria-label="Sair do sistema">
+                        <i class="fas fa-sign-out-alt"></i> Sair
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="gestor-container container" id="main-content">
+        <!-- página interna com barra de título similar às páginas de batedores -->
+        <button class="btn-back" onclick="window.location='gestor.html'">
+            <i class="fas fa-arrow-left"></i> Voltar ao Painel
+        </button>
+        <div class="perfil-header">
+            <h2>Gestão de Usuários</h2>
+        </div>
+        <section aria-labelledby="usuarios-title" class="tabela-section">
+            <div class="tabela-header">
+                <h3><i class="fas fa-users"></i> Lista de Usuários</h3>
+                <div class="actions-row">
+                    <button type="button" id="btnNovoUsuario" class="btn-primario" aria-label="Criar novo usuário">
+                        <i class="fas fa-user-plus"></i> Novo Usuário
+                    </button>
+                    <div class="filtro-group">
+                        <label for="filtroUsuarios">Buscar</label>
+                        <input type="text" id="filtroUsuarios" placeholder="Nome ou e-mail...">
+                    </div>
+                    <div class="filtro-group">
+                        <label for="filtroRole">Role</label>
+                        <select id="filtroRole">
+                            <option value="">Todos</option>
+                            <option value="gestor">Gestor</option>
+                            <option value="batedor">Batedor</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="tabela-batedores" id="tabelaUsuariosWrapper">
+                <table id="tabelaUsuarios">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Criado em</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaUsuariosBody">
+                        <!-- preenchido dinamicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- modal de usuário -->
+    <div class="modal-overlay" id="modalUsuario" aria-hidden="true">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalUsuarioTitulo">
+            <header class="modal-header">
+                <h2 id="modalUsuarioTitulo">Usuário</h2>
+                <button class="modal-close" aria-label="Fechar">
+                    <i class="fas fa-times"></i>
+                </button>
+            </header>
+            <div class="modal-body">
+                <form id="formUsuario">
+                    <input type="hidden" id="usuarioId">
+                    <div class="form-group">
+                        <label for="usuarioNome">Nome</label>
+                        <input type="text" id="usuarioNome" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="usuarioEmail">Email</label>
+                        <input type="email" id="usuarioEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="usuarioRole">Role</label>
+                        <select id="usuarioRole" required>
+                            <option value="batedor">Batedor</option>
+                            <option value="gestor">Gestor</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="usuarioSenha">Senha</label>
+                        <input type="password" id="usuarioSenha" placeholder="Deixe em branco para não alterar">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">Salvar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/usuarios.js?v=1"></script>
+</body>
+
+</html>

@@ -19,7 +19,13 @@ export const auth = {
     },
 
     getToken() {
-        return localStorage.getItem(STORAGE_KEYS.TOKEN);
+        const token = localStorage.getItem(STORAGE_KEYS.TOKEN);
+        if (token === 'fake-jwt-token') {
+            console.warn('Token falso detectado. Removendo...');
+            localStorage.removeItem(STORAGE_KEYS.TOKEN);
+            return null;
+        }
+        return token;
     },
 
     setUsuario(usuario) {
