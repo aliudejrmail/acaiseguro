@@ -209,6 +209,132 @@
             color: #27AE60;
             background: rgba(39,174,96,0.05);
         }
+        
+        /* Responsividade Mobile */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
+            .apresentacao-container {
+                padding: 2rem 1.5rem;
+            }
+            
+            .logo i {
+                font-size: 3.5rem;
+            }
+            
+            .logo h1 {
+                font-size: 1.9rem;
+            }
+            
+            .apresentacao-container h2 {
+                font-size: 1.5rem;
+            }
+            
+            .apresentacao-container p {
+                font-size: 0.95rem;
+            }
+            
+            .tab-btn {
+                padding: 10px 20px;
+                font-size: 0.95rem;
+            }
+            
+            .form-group input {
+                padding: 12px 14px;
+                font-size: 0.95rem;
+            }
+            
+            .form-actions button {
+                padding: 13px 35px;
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .apresentacao-container {
+                padding: 1.5rem 1.2rem;
+                border-radius: 15px;
+            }
+            
+            .logo i {
+                font-size: 3rem;
+            }
+            
+            .logo h1 {
+                font-size: 1.6rem;
+            }
+            
+            .apresentacao-container h2 {
+                font-size: 1.3rem;
+            }
+            
+            .apresentacao-container p {
+                font-size: 0.9rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .tab-btns {
+                gap: 8px;
+                padding: 5px;
+            }
+            
+            .tab-btn {
+                padding: 10px 16px;
+                font-size: 0.9rem;
+            }
+            
+            .form-group {
+                margin-bottom: 1.2rem;
+            }
+            
+            .form-group label {
+                font-size: 0.9rem;
+                margin-bottom: 6px;
+            }
+            
+            .form-group input {
+                padding: 11px 13px;
+                font-size: 0.9rem;
+            }
+            
+            .form-actions {
+                margin-top: 1.5rem;
+            }
+            
+            .form-actions button {
+                padding: 12px 30px;
+                font-size: 0.95rem;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .apresentacao-container {
+                padding: 1.2rem 1rem;
+            }
+            
+            .logo i {
+                font-size: 2.5rem;
+            }
+            
+            .logo h1 {
+                font-size: 1.4rem;
+            }
+            
+            .apresentacao-container h2 {
+                font-size: 1.2rem;
+            }
+            
+            .tab-btn {
+                padding: 9px 12px;
+                font-size: 0.85rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -217,13 +343,20 @@
             <i class="fas fa-seedling"></i>
             <h1>Açaí Seguro</h1>
         </div>
-        <h2>Bem-vindo ao sistema!</h2>
+        <h2>Seja Bem-vindo!</h2>
         <p>Gestão sanitária e certificação para batedores de açaí. Faça login ou cadastre-se para acessar as funcionalidades.</p>
         <div class="tab-btns">
             <button class="tab-btn active" id="btnLogin">Login</button>
             <button class="tab-btn" id="btnCadastro">Cadastro</button>
         </div>
         <form id="formLogin" class="form active">
+            <div class="form-group">
+                <label for="loginTipo">Tipo de Acesso</label>
+                <select id="loginTipo" style="width: 100%; padding: 13px 16px; border: 2px solid #E1E8ED; border-radius: 10px; font-size: 1rem; background: white;">
+                    <option value="batedor">Batedor de Açaí</option>
+                    <option value="gestor">Gestor / Autoridade Sanitária</option>
+                </select>
+            </div>
             <div class="form-group">
                 <label for="loginEmail">E-mail</label>
                 <input type="email" id="loginEmail" required autocomplete="username">
@@ -256,12 +389,15 @@
             <div class="msg" id="cadastroMsg"></div>
         </form>
     </div>
-    <script>
+    <script type="module">
+        import { auth } from './js/modules/auth.js';
+
         // Alternância entre abas
         const btnLogin = document.getElementById('btnLogin');
         const btnCadastro = document.getElementById('btnCadastro');
         const formLogin = document.getElementById('formLogin');
         const formCadastro = document.getElementById('formCadastro');
+        
         btnLogin.onclick = () => {
             btnLogin.classList.add('active');
             btnCadastro.classList.remove('active');
@@ -274,6 +410,7 @@
             formCadastro.classList.add('active');
             formLogin.classList.remove('active');
         };
+        
         const API_BASE = 'http://localhost:3000/api';
 
         function setMsg(el, texto, tipo) {
@@ -281,61 +418,101 @@
             el.className = tipo === 'ok' ? 'msg success' : 'msg';
         }
 
-        // LOGIN REAL
+        // LOGIN
         formLogin.onsubmit = async function(e) {
             e.preventDefault();
-            const email = loginEmail.value.trim();
-            const senha = loginSenha.value;
+            const tipoAcesso = document.getElementById('loginTipo').value;
+            const email = document.getElementById('loginEmail').value.trim();
+            const senha = document.getElementById('loginSenha').value;
             const msgEl = document.getElementById('loginMsg');
-            if (!email || !senha) { setMsg(msgEl, 'Preencha todos os campos.', 'erro'); return; }
+            
+            if (!email || !senha) { 
+                setMsg(msgEl, 'Preencha todos os campos.', 'erro'); 
+                return; 
+            }
+            
             msgEl.textContent = 'Aguarde...';
+            
             try {
                 const resp = await fetch(API_BASE + '/usuario/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, senha })
                 });
+                
                 const data = await resp.json();
+                
                 if (resp.ok && data.success) {
-                    // Salvar dados do usuário logado
-                    localStorage.setItem('usuario', JSON.stringify(data.data));
+                    const userRole = data.data.role || 'batedor';
+                    
+                    if (tipoAcesso === 'gestor' && userRole !== 'gestor') {
+                        setMsg(msgEl, 'Este usuário não possui permissão de gestor.', 'erro');
+                        return;
+                    }
+                    
+                    if (tipoAcesso === 'batedor' && userRole === 'gestor') {
+                        setMsg(msgEl, 'Use o acesso de Gestor para esta conta.', 'erro');
+                        return;
+                    }
 
-                    // Tentar recuperar cadastro do batedor vinculado e salvar CPF
-                    try {
-                        const respCad = await fetch(API_BASE + '/meu-cadastro/' + data.data.id);
-                        const dataCad = await respCad.json();
-                        if (dataCad.success && dataCad.data) {
-                            localStorage.setItem('userCPF', dataCad.data.cpf);
-                            localStorage.setItem('cadastro', JSON.stringify(dataCad.data));
-                        }
-                    } catch (e) { /* servidor offline, segue sem cache */ }
+                    // Salvar Token e dados
+                    auth.setToken(data.token);
+                    
+                    if (tipoAcesso === 'gestor') {
+                        auth.setGestor(data.data);
+                        setMsg(msgEl, 'Login de gestor realizado! Redirecionando...', 'ok');
+                        setTimeout(() => { window.location.href = 'gestor.html'; }, 1000);
+                    } else {
+                        auth.setUsuario(data.data);
+                        
+                        // Tentar recuperar cadastro do batedor vinculado
+                        try {
+                            const respCad = await fetch(API_BASE + '/meu-cadastro/' + data.data.id, {
+                                headers: { 'Authorization': `Bearer ${data.token}` }
+                            });
+                            const dataCad = await respCad.json();
+                            if (dataCad.success && dataCad.data) {
+                                localStorage.setItem('userCPF', dataCad.data.cpf);
+                                localStorage.setItem('cadastro', JSON.stringify(dataCad.data));
+                            }
+                        } catch (e) { console.error('Erro ao buscar cadastro:', e); }
 
-                    setMsg(msgEl, 'Login realizado! Redirecionando...', 'ok');
-                    setTimeout(() => { window.location.href = 'index.html'; }, 1000);
+                        setMsg(msgEl, 'Login realizado! Redirecionando...', 'ok');
+                        setTimeout(() => { window.location.href = 'index.html'; }, 1000);
+                    }
                 } else {
                     setMsg(msgEl, data.error || 'Erro ao fazer login.', 'erro');
                 }
             } catch (err) {
+                console.error('Login error:', err);
                 setMsg(msgEl, 'Não foi possível conectar ao servidor.', 'erro');
             }
         };
 
-        // CADASTRO REAL
+        // CADASTRO
         formCadastro.onsubmit = async function(e) {
             e.preventDefault();
-            const email = cadastroEmail.value.trim();
-            const senha = cadastroSenha.value;
-            const nome = cadastroNome.value.trim();
+            const email = document.getElementById('cadastroEmail').value.trim();
+            const senha = document.getElementById('cadastroSenha').value;
+            const nome = document.getElementById('cadastroNome').value.trim();
             const msgEl = document.getElementById('cadastroMsg');
-            if (!email || !senha || !nome) { setMsg(msgEl, 'Preencha todos os campos.', 'erro'); return; }
+            
+            if (!email || !senha || !nome) { 
+                setMsg(msgEl, 'Preencha todos os campos.', 'erro'); 
+                return; 
+            }
+            
             msgEl.textContent = 'Aguarde...';
+            
             try {
                 const resp = await fetch(API_BASE + '/usuario/cadastro', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ nome, email, senha })
                 });
+                
                 const data = await resp.json();
+                
                 if (resp.ok && data.success) {
                     setMsg(msgEl, 'Cadastro realizado com sucesso! Faça o login.', 'ok');
                     formCadastro.reset();

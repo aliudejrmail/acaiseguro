@@ -5,14 +5,15 @@ const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 const apiRoutes = require('./routes/api');
+const gestorRoutes = require('./routes/gestor');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middlewares
 app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({ limit: '10mb' })); // Aumentar limite para fotos
+app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 
 // Log de requisições
 app.use((req, res, next) => {
@@ -27,8 +28,10 @@ app.get('/', (req, res) => {
 
 // Servir arquivos estáticos (css, js, imagens)
 app.use(express.static(path.join(__dirname, '../')));
+
 // Rotas da API
 app.use('/api', apiRoutes);
+app.use('/api/gestor', gestorRoutes);
 
 // Rota 404
 app.use((req, res) => {

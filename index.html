@@ -1,27 +1,34 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Açaí Seguro - Gestão de Qualidade Sanitária</title>
-    <link rel="stylesheet" href="css/styles.css?v=6">
+    <link rel="stylesheet" href="css/styles.css?v=18">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
+
 <body>
     <header>
         <div class="container">
-            <div class="logo">
-                <i class="fas fa-leaf"></i>
-                <h1>Açaí Seguro</h1>
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-leaf"></i>
+                    <h1>Bem-vindo ao Açaí Seguro</h1>
+                </div>
+                <nav>
+                    <button class="btn-perfil" onclick="showPage('perfil')">
+                        <i class="fas fa-user"></i> Meu Perfil
+                    </button>
+                    <button class="btn-perfil" onclick="fazerLogout()" style="margin-left:8px; background:#95a5a6;">
+                        <i class="fas fa-sign-out-alt"></i> Sair
+                    </button>
+                </nav>
             </div>
-            <nav>
-                <button class="btn-perfil" onclick="showPage('perfil')">
-                    <i class="fas fa-user"></i> Meu Perfil
-                </button>
-                <button class="btn-perfil" onclick="fazerLogout()" style="margin-left:8px; background:#95a5a6;">
-                    <i class="fas fa-sign-out-alt"></i> Sair
-                </button>
-            </nav>
         </div>
     </header>
 
@@ -29,22 +36,89 @@
         <!-- Página Inicial -->
         <div id="home" class="page active">
             <!-- Banner: completar cadastro -->
-            <div id="banner-cadastro" style="display:none; background:#fff3cd; border:1.5px solid #ffc107; border-radius:10px; padding:16px 20px; margin-bottom:20px; align-items:center; gap:14px;">
+            <div id="banner-cadastro"
+                style="display:none; background:#fff3cd; border:1.5px solid #ffc107; border-radius:10px; padding:16px 20px; margin-bottom:20px; align-items:center; gap:14px;">
                 <i class="fas fa-exclamation-circle" style="font-size:1.8rem; color:#e67e00; flex-shrink:0;"></i>
                 <div style="flex:1;">
                     <strong style="color:#7a4700;">Cadastro incompleto</strong>
-                    <p style="margin:4px 0 0; color:#55400a; font-size:0.95rem;">Complete seu cadastro para acessar todas as funcionalidades do sistema.</p>
+                    <p style="margin:4px 0 0; color:#55400a; font-size:0.95rem;">Complete seu cadastro para acessar
+                        todas as funcionalidades do sistema.</p>
                 </div>
-                <button onclick="showPage('cadastro')" style="background:#e67e00; color:#fff; border:none; border-radius:7px; padding:9px 18px; font-weight:bold; cursor:pointer; white-space:nowrap;">
+                <button onclick="showPage('cadastro')"
+                    style="background:#e67e00; color:#fff; border:none; border-radius:7px; padding:9px 18px; font-weight:bold; cursor:pointer; white-space:nowrap;">
                     <i class="fas fa-user-plus"></i> Completar Cadastro
                 </button>
             </div>
 
             <section class="hero">
-                <h2>Bem-vindo ao Açaí Seguro</h2>
                 <p class="subtitle">Sistema de gestão para batedores de açaí artesanal</p>
                 <p>Garantindo segurança alimentar e prevenindo a doença de Chagas</p>
             </section>
+
+            <!-- Status Resumido -->
+            <div id="statusResumo" class="status-resumo" style="display:none;">
+                <div class="status-header">
+                    <h3><i class="fas fa-chart-line"></i> Seu Progresso</h3>
+                </div>
+                <div class="status-grid">
+                    <div class="status-item">
+                        <div class="status-icon checklist-icon">
+                            <i class="fas fa-clipboard-check"></i>
+                        </div>
+                        <div class="status-info">
+                            <span class="status-label">Check-lists</span>
+                            <span class="status-valor" id="statusChecklists">0/7 dias</span>
+                            <span class="status-desc">Últimos 7 dias consecutivos</span>
+                        </div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-icon selo-icon">
+                            <i class="fas fa-certificate"></i>
+                        </div>
+                        <div class="status-info">
+                            <span class="status-label">Selo Atual</span>
+                            <span class="status-valor" id="statusSelo">Nenhum</span>
+                            <span class="status-desc" id="statusSeloDesc">Complete os requisitos</span>
+                        </div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-icon progresso-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div class="status-info">
+                            <span class="status-label">Progresso Prata</span>
+                            <span class="status-valor" id="statusProgresso">0%</span>
+                            <span class="status-desc">Requisitos concluídos</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notificações de Selos -->
+            <div id="notificacaoSelo" class="notificacao-selo" style="display:none;">
+                <i class="fas fa-exclamation-triangle"></i>
+                <div class="notificacao-content">
+                    <strong>Atenção!</strong>
+                    <p id="notificacaoTexto"></p>
+                </div>
+                <button class="btn-notificacao" onclick="showPage('selos')">Ver Selos</button>
+            </div>
+
+            <!-- Dica do Dia -->
+            <div class="dica-dia">
+                <div class="dica-header">
+                    <i class="fas fa-lightbulb"></i>
+                    <h3>Dica do Dia</h3>
+                </div>
+                <p id="dicaTexto">Carregando dica...</p>
+            </div>
+
+            <!-- Busca rápida -->
+            <div class="busca-rapida">
+                <i class="fas fa-search"></i>
+                <input type="text" id="buscaModulos" placeholder="Buscar módulos, etapas ou funcionalidades..."
+                    onkeyup="buscarModulos()">
+            </div>
 
             <section class="modulos-grid">
                 <div class="modulo-card" id="card-cadastro" onclick="showPage('cadastro')">
@@ -90,10 +164,21 @@
             <button class="btn-back" onclick="showPage('home')">
                 <i class="fas fa-arrow-left"></i> Voltar
             </button>
-            <h2>Meu Perfil</h2>
+            <div class="perfil-header">
+                <h2>Meu Perfil</h2>
+                <button class="btn-exportar" onclick="exportarPerfilPDF()" title="Exportar perfil em PDF">
+                    <i class="fas fa-file-pdf"></i> Exportar PDF
+                </button>
+            </div>
             <div class="perfil-info" id="perfilDisplay">
                 <p class="sem-cadastro">Você ainda não completou seu cadastro.</p>
                 <button class="btn-primary" onclick="showPage('cadastro')">Completar Cadastro</button>
+            </div>
+
+            <!-- Histórico de Edições -->
+            <div id="historicoEdicoes" class="historico-secao" style="display:none;">
+                <h3><i class="fas fa-history"></i> Histórico de Edições</h3>
+                <div id="historicoLista" class="historico-lista"></div>
             </div>
         </div>
 
@@ -103,98 +188,214 @@
                 <i class="fas fa-arrow-left"></i> Voltar
             </button>
             <h2>Cadastro do Batedor</h2>
-            
+
+            <!-- Indicador de Progresso -->
+            <div class="progress-steps">
+                <div class="step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Dados Pessoais</div>
+                </div>
+                <div class="step-divider"></div>
+                <div class="step" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Estabelecimento</div>
+                </div>
+                <div class="step-divider"></div>
+                <div class="step" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Documentos</div>
+                </div>
+            </div>
+
+            <!-- Indicador de Salvamento Automático -->
+            <div id="autoSaveIndicator" class="auto-save-indicator" style="display:none;">
+                <i class="fas fa-sync fa-spin"></i> Salvando automaticamente...
+            </div>
+
             <form id="formCadastro" class="form-cadastro">
-                <div class="form-section">
-                    <h3><i class="fas fa-user"></i> Dados Pessoais</h3>
-                    <div class="form-group">
-                        <label for="nome">Nome Completo *</label>
-                        <input type="text" id="nome" required>
+                <!-- Step 1: Dados Pessoais -->
+                <div class="form-step active" data-step="1">
+                    <div class="form-section">
+                        <h3><i class="fas fa-user"></i> Dados Pessoais</h3>
+                        <div class="form-group">
+                            <label for="nome">Nome Completo *</label>
+                            <input type="text" id="nome" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cpf">CPF *</label>
+                            <input type="text" id="cpf" maxlength="14" required>
+                            <span class="validacao-feedback" id="cpfFeedback"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="telefone">Telefone *</label>
+                            <input type="tel" id="telefone" maxlength="15" required>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="cpf">CPF *</label>
-                        <input type="text" id="cpf" maxlength="14" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="telefone">Telefone *</label>
-                        <input type="tel" id="telefone" maxlength="15" required>
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3><i class="fas fa-store"></i> Dados do Estabelecimento</h3>
-                    <div class="form-group">
-                        <label for="nomeFantasia">Nome Fantasia *</label>
-                        <input type="text" id="nomeFantasia" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="cnpj">CNPJ (se houver)</label>
-                        <input type="text" id="cnpj" maxlength="18">
-                    </div>
-                    <div class="form-group">
-                        <label for="endereco">Endereço Completo *</label>
-                        <input type="text" id="endereco" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="alvara">Alvará Sanitário *</label>
-                        <input type="text" id="alvara" required>
-                    </div>
-                    <div class="form-group">
-                        <button type="button" class="btn-secondary" onclick="getLocation()">
-                            <i class="fas fa-map-marker-alt"></i> Obter Localização
+                    <div class="step-buttons">
+                        <button type="button" class="btn-primary" onclick="nextStep(2)">
+                            Próximo <i class="fas fa-arrow-right"></i>
                         </button>
-                        <span id="localizacao" class="text-muted"></span>
                     </div>
                 </div>
 
-                <button type="submit" class="btn-primary btn-large">
-                    <i class="fas fa-save"></i> Salvar Cadastro
-                </button>
+                <!-- Step 2: Dados do Estabelecimento -->
+                <div class="form-step" data-step="2">
+                    <div class="form-section">
+                        <h3><i class="fas fa-store"></i> Dados do Estabelecimento</h3>
+                        <div class="form-group">
+                            <label for="nomeFantasia">Nome Fantasia *</label>
+                            <input type="text" id="nomeFantasia" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cnpj">CNPJ (se houver)</label>
+                            <input type="text" id="cnpj" maxlength="18">
+                            <span class="validacao-feedback" id="cnpjFeedback"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="cep">CEP *</label>
+                            <div class="input-with-button">
+                                <input type="text" id="cep" maxlength="9" required placeholder="00000-000">
+                                <button type="button" class="btn-buscar-cep" onclick="buscarCEP()">
+                                    <i class="fas fa-search"></i> Buscar
+                                </button>
+                            </div>
+                            <span class="validacao-feedback" id="cepFeedback"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="endereco">Endereço Completo *</label>
+                            <input type="text" id="endereco" required placeholder="Rua, número, bairro">
+                        </div>
+                        <div class="form-group">
+                            <label for="cidade">Cidade *</label>
+                            <input type="text" id="cidade" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="estado">Estado *</label>
+                            <input type="text" id="estado" maxlength="2" required placeholder="UF">
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn-secondary" onclick="getLocation()">
+                                <i class="fas fa-map-marker-alt"></i> Obter Localização GPS
+                            </button>
+                            <span id="localizacao" class="text-muted"></span>
+                        </div>
+                        <div class="form-group">
+                            <div id="mapaLocalizacao" class="mapa-container" style="display:none;"></div>
+                        </div>
+                    </div>
+                    <div class="step-buttons">
+                        <button type="button" class="btn-secondary" onclick="prevStep(1)">
+                            <i class="fas fa-arrow-left"></i> Anterior
+                        </button>
+                        <button type="button" class="btn-primary" onclick="nextStep(3)">
+                            Próximo <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Documentos -->
+                <div class="form-step" data-step="3">
+                    <div class="form-section">
+                        <h3><i class="fas fa-file-alt"></i> Documentos e Fotos</h3>
+                        <div class="form-group">
+                            <label for="alvara">Número do Alvará Sanitário *</label>
+                            <input type="text" id="alvara">
+                        </div>
+                        <div class="form-group">
+                            <label for="alvaraFoto">Foto do Alvará (JPG, PNG ou PDF) *</label>
+                            <input type="file" id="alvaraFoto" accept="image/*,application/pdf">
+                            <div id="alvaraPreview" class="preview-container"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="fotosEstabelecimento">Fotos do Estabelecimento (até 5 fotos)</label>
+                            <input type="file" id="fotosEstabelecimento" accept="image/*" multiple>
+                            <small class="form-hint">Fotos da fachada, área de produção, equipamentos, etc.</small>
+                            <div id="fotosPreview" class="fotos-grid"></div>
+                        </div>
+                    </div>
+                    <div class="step-buttons">
+                        <button type="button" class="btn-secondary" onclick="prevStep(2)">
+                            <i class="fas fa-arrow-left"></i> Anterior
+                        </button>
+                        <button type="submit" class="btn-primary btn-large">
+                            <i class="fas fa-save"></i> Salvar Cadastro
+                        </button>
+                    </div>
+                </div>
             </form>
         </div>
 
         <!-- Módulo 2: Calculadora de Cloração -->
-        <div id="calculadora" class="page">
-            <button class="btn-back" onclick="showPage('home')">
-                <i class="fas fa-arrow-left"></i> Voltar
-            </button>
-            <h2>Calculadora de Higienização</h2>
+        <div id="calculadora" class="page" id="calculadora-page">
+            <div class="calc-header">
+                <button class="btn-back" onclick="showPage('home')">
+                    <i class="fas fa-arrow-left"></i> Voltar
+                </button>
+                <button class="btn-dark-mode" id="btnDarkMode" onclick="toggleDarkMode()" title="Modo escuro">
+                    <i class="fas fa-moon" id="darkModeIcon"></i>
+                </button>
+            </div>
+
+            <h2><i class="fas fa-flask"></i> Calculadora de Higienização</h2>
             <p class="info-text">
-                <i class="fas fa-info-circle"></i> 
+                <i class="fas fa-info-circle"></i>
                 A cloração adequada é essencial para eliminar microrganismos e garantir a segurança do açaí.
+                Faixa segura de hipoclorito: <strong>2% a 12%</strong>.
             </p>
+
+            <!-- Alerta de concentração -->
+            <div id="alertaConcentracao" class="alerta-concentracao" style="display:none;">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span id="alertaConcentracaoMsg"></span>
+            </div>
 
             <form id="formCalculadora" class="form-calculadora">
                 <div class="form-group">
                     <label for="quantidadeAgua">Quantidade de água no tanque (litros) *</label>
-                    <input type="number" id="quantidadeAgua" step="0.1" min="0.1" required>
+                    <input type="number" id="quantidadeAgua" step="0.1" min="0.1" required placeholder="Ex: 10">
                 </div>
 
                 <div class="form-group">
                     <label for="concentracaoCloro">Concentração de cloro ativo do produto (%) *</label>
-                    <select id="concentracaoCloro" required>
+                    <select id="concentracaoCloro" required onchange="verificarConcentracao(this.value)">
                         <option value="">Selecione...</option>
-                        <option value="2.0">2,0%</option>
-                        <option value="2.5">2,5%</option>
-                        <option value="10">10%</option>
-                        <option value="12">12%</option>
+                        <option value="2.0">2,0% — Hipoclorito diluído</option>
+                        <option value="2.5">2,5% — Água sanitária padrão</option>
+                        <option value="10">10% — Hipoclorito concentrado</option>
+                        <option value="12">12% — Hipoclorito superior</option>
                     </select>
                 </div>
 
                 <button type="submit" class="btn-primary btn-large">
-                    <i class="fas fa-calculator"></i> Calcular
+                    <i class="fas fa-calculator"></i> Calcular Dosagem
                 </button>
             </form>
 
+            <!-- Resultado -->
             <div id="resultadoCalculadora" class="resultado-box" style="display: none;">
-                <h3>Resultado do Cálculo</h3>
+                <div class="resultado-header">
+                    <h3><i class="fas fa-check-circle"></i> Resultado do Cálculo</h3>
+                    <div class="resultado-acoes">
+                        <button class="btn-compartilhar" onclick="compartilharWhatsApp()"
+                            title="Compartilhar via WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </button>
+                        <button class="btn-compartilhar btn-email" onclick="compartilharEmail()"
+                            title="Compartilhar por E-mail">
+                            <i class="fas fa-envelope"></i>
+                        </button>
+                    </div>
+                </div>
                 <div class="resultado-destaque">
-                    <p><strong>Quantidade de hipoclorito necessária:</strong></p>
+                    <p><strong>Hipoclorito necessário:</strong></p>
                     <p class="valor-grande" id="quantidadeCloro"></p>
                 </div>
+                <div class="resultado-meta">
+                    <span id="resultadoAgua"></span>
+                    <span id="resultadoConc"></span>
+                </div>
                 <div class="instrucoes">
-                    <h4><i class="fas fa-clock"></i> Tempo de Imersão</h4>
-                    <p id="tempoImersao"></p>
+                    <h4><i class="fas fa-clock"></i> Tempo de Imersão: <span id="tempoImersao"></span></h4>
                     <h4><i class="fas fa-list-ol"></i> Instruções</h4>
                     <ol>
                         <li>Adicione a quantidade calculada de hipoclorito na água</li>
@@ -204,6 +405,19 @@
                     </ol>
                 </div>
             </div>
+
+            <!-- Histórico de Cálculos -->
+            <div class="historico-calc-section">
+                <div class="historico-calc-header">
+                    <h3><i class="fas fa-history"></i> Histórico de Dosagens</h3>
+                    <button class="btn-limpar-hist" onclick="limparHistoricoCalc()" title="Limpar histórico">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                <div id="historicoCalc" class="historico-calc-lista">
+                    <p class="vazio-hist"><i class="fas fa-inbox"></i> Nenhum cálculo salvo ainda.</p>
+                </div>
+            </div>
         </div>
 
         <!-- Módulo 3: Etapas do Processamento -->
@@ -211,123 +425,406 @@
             <button class="btn-back" onclick="showPage('home')">
                 <i class="fas fa-arrow-left"></i> Voltar
             </button>
-            <h2>Etapas do Processamento</h2>
-            
-            <div class="etapas-container">
-                <div class="etapa">
-                    <div class="etapa-numero">1</div>
-                    <div class="etapa-conteudo">
-                        <h3><i class="fas fa-box-open"></i> Recebimento</h3>
-                        <p>Receba os frutos do açaí de fornecedores confiáveis. Verifique a qualidade, ausência de sujidades visíveis e se estão em bom estado de conservação.</p>
-                        <ul>
-                            <li>Verificar procedência</li>
-                            <li>Observar integridade dos frutos</li>
-                            <li>Rejeitar lotes com sinais de deterioração</li>
-                        </ul>
+
+            <div class="etapas-header-actions">
+                <h2>Etapas do Processamento</h2>
+                <div class="etapas-controls">
+                    <button class="btn-step-mode" onclick="toggleStepByStepMode()" title="Modo Passo a Passo">
+                        <i class="fas fa-list-ol"></i> <span id="stepModeText">Modo Passo a Passo</span>
+                    </button>
+                    <button class="btn-reset-checklist" onclick="resetAllChecklists()" title="Reiniciar Checklists">
+                        <i class="fas fa-redo"></i> Reiniciar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Barra de Progresso -->
+            <div class="progresso-geral-container">
+                <div class="progresso-header">
+                    <span>Progresso do Processamento</span>
+                    <span id="progressoPercentual">0%</span>
+                </div>
+                <div class="progresso-bar">
+                    <div class="progresso-fill" id="progressoFill"></div>
+                </div>
+            </div>
+
+            <div class="etapas-container" id="etapasContainer">
+                <!-- Etapa 1: Recebimento -->
+                <div class="etapa" data-etapa="1" data-checklist="recebimento">
+                    <div class="etapa-header-wrapper">
+                        <div class="etapa-numero">1</div>
+                        <div class="etapa-conteudo">
+                            <h3><i class="fas fa-box-open"></i> Recebimento</h3>
+                            <p>Receba os frutos do açaí de fornecedores confiáveis. Verifique a qualidade, ausência de
+                                sujidades visíveis e se estão em bom estado de conservação.</p>
+                        </div>
+                        <div class="etapa-checklist-toggle">
+                            <input type="checkbox" id="check-etapa-1" class="check-etapa-concluida"
+                                onchange="toggleEtapaConcluida(1)">
+                            <label for="check-etapa-1" class="check-label">
+                                <i class="fas fa-check"></i>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="etapa-checklist">
+                        <h4><i class="fas fa-clipboard-list"></i> Checklist</h4>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check-1-1" class="checklist-check" data-etapa="1"
+                                onchange="updateProgresso()">
+                            <label for="check-1-1">Verificar procedência dos frutos</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check-1-2" class="checklist-check" data-etapa="1"
+                                onchange="updateProgresso()">
+                            <label for="check-1-2">Observar integridade dos frutos</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check-1-3" class="checklist-check" data-etapa="1"
+                                onchange="updateProgresso()">
+                            <label for="check-1-3">Rejeitar lotes com sinais de deterioração</label>
+                        </div>
                     </div>
                 </div>
 
-                <div class="etapa">
-                    <div class="etapa-numero">2</div>
-                    <div class="etapa-conteudo">
-                        <h3><i class="fas fa-hand-paper"></i> Seleção/Catação</h3>
-                        <p>Remova manualmente os frutos danificados, verdes, com sinais de contaminação ou presença de insetos.</p>
-                        <ul>
-                            <li>Use luvas descartáveis</li>
-                            <li>Descarte frutos impróprios</li>
-                            <li>Trabalhe em superfície limpa</li>
-                        </ul>
+                <!-- Etapa 2: Seleção/Catação -->
+                <div class="etapa" data-etapa="2" data-checklist="selecao">
+                    <div class="etapa-header-wrapper">
+                        <div class="etapa-numero">2</div>
+                        <div class="etapa-conteudo">
+                            <h3><i class="fas fa-hand-paper"></i> Seleção/Catação</h3>
+                            <p>Remova manualmente os frutos danificados, verdes, com sinais de contaminação ou presença
+                                de
+                                insetos.</p>
+                        </div>
+                        <div class="etapa-checklist-toggle">
+                            <input type="checkbox" id="check-etapa-2" class="check-etapa-concluida"
+                                onchange="toggleEtapaConcluida(2)">
+                            <label for="check-etapa-2" class="check-label">
+                                <i class="fas fa-check"></i>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="etapa-checklist">
+                        <h4><i class="fas fa-clipboard-list"></i> Checklist</h4>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check-2-1" class="checklist-check" data-etapa="2"
+                                onchange="updateProgresso()">
+                            <label for="check-2-1">Usar luvas descartáveis</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check-2-2" class="checklist-check" data-etapa="2"
+                                onchange="updateProgresso()">
+                            <label for="check-2-2">Descartar frutos impróprios</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check-2-3" class="checklist-check" data-etapa="2"
+                                onchange="updateProgresso()">
+                            <label for="check-2-3">Trabalhar em superfície limpa</label>
+                        </div>
                     </div>
                 </div>
 
-                <div class="etapa">
-                    <div class="etapa-numero">3</div>
-                    <div class="etapa-conteudo">
-                        <h3><i class="fas fa-shower"></i> Lavagem Prévia</h3>
-                        <p>Lave os frutos em água corrente potável para remover sujidades grosseiras, folhas e impurezas.</p>
-                        <ul>
-                            <li>Use água potável corrente</li>
-                            <li>Esfregue suavemente os frutos</li>
-                            <li>Troque a água se necessário</li>
-                        </ul>
+                <!-- Etapa 3: Lavagem Prévia -->
+                <div class="etapa" data-etapa="3" data-checklist="lavagem">
+                    <div class="etapa-header-wrapper">
+                        <div class="etapa-numero">3</div>
+                        <div class="etapa-conteudo">
+                            <h3><i class="fas fa-shower"></i> Lavagem Prévia</h3>
+                            <p>Lave os frutos em água corrente potável para remover sujidades grosseiras, folhas e
+                                impurezas.</p>
+                        </div>
+                        <div class="etapa-checklist-toggle">
+                            <input type="checkbox" id="check-etapa-3" class="check-etapa-concluida"
+                                onchange="toggleEtapaConcluida(3)">
+                            <label for="check-etapa-3" class="check-label">
+                                <i class="fas fa-check"></i>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="etapa-checklist">
+                        <h4><i class="fas fa-clipboard-list"></i> Checklist</h4>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check-3-1" class="checklist-check" data-etapa="3"
+                                onchange="updateProgresso()">
+                            <label for="check-3-1">Usar água potável corrente</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check-3-2" class="checklist-check" data-etapa="3"
+                                onchange="updateProgresso()">
+                            <label for="check-3-2">Esfregar suavemente os frutos</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check-3-3" class="checklist-check" data-etapa="3"
+                                onchange="updateProgresso()">
+                            <label for="check-3-3">Trocar a água se necessário</label>
+                        </div>
                     </div>
                 </div>
 
-                <div class="etapa etapa-critica">
-                    <div class="etapa-numero">4</div>
-                    <div class="etapa-conteudo">
-                        <h3><i class="fas fa-flask"></i> Desinfecção (Cloração)</h3>
-                        <p class="text-critico"><strong>ETAPA CRÍTICA!</strong> Imersão dos frutos em solução clorada para eliminação de microrganismos.</p>
-                        <ul>
-                            <li>Use a calculadora para dosar corretamente o cloro</li>
-                            <li>Concentração ideal: 100-200 ppm de cloro livre</li>
-                            <li>Tempo de contato: 15 minutos</li>
-                            <li>Mergulhe completamente todos os frutos</li>
-                        </ul>
-                        <button class="btn-secondary" onclick="showPage('calculadora')">
-                            <i class="fas fa-calculator"></i> Ir para Calculadora
-                        </button>
+                <!-- Etapa 4: Desinfecção (Cloração) - CRÍTICA -->
+                <div class="etapa etapa-critica" data-etapa="4" data-checklist="desinfeccao" data-tempo="900">
+                    <div class="etapa-header-wrapper">
+                        <div class="etapa-numero">4</div>
+                        <div class="etapa-conteudo">
+                            <h3><i class="fas fa-flask"></i> Desinfecção (Cloração) <span class="badge-critica">⚠️
+                                    CRÍTICA</span></h3>
+                            <p class="text-critico">Imersão dos frutos em solução clorada para eliminação de
+                                microrganismos.</p>
+                        </div>
+                        <div class="etapa-checklist-toggle">
+                            <input type="checkbox" id="check-etapa-4" class="check-etapa-concluida"
+                                onchange="toggleEtapaConcluida(4)">
+                            <label for="check-etapa-4" class="check-label">
+                                <i class="fas fa-check"></i>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="etapa-checklist">
+                        <h4><i class="fas fa-clipboard-list"></i> Checklist</h4>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check-4-1" class="checklist-check" data-etapa="4"
+                                onchange="updateProgresso()">
+                            <label for="check-4-1">Usar calculadora para dosar corretamente o cloro</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check-4-2" class="checklist-check" data-etapa="4"
+                                onchange="updateProgresso()">
+                            <label for="check-4-2">Concentração ideal: 100-200 ppm de cloro livre</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check-4-3" class="checklist-check" data-etapa="4"
+                                onchange="updateProgresso()">
+                            <label for="check-4-3">Tempo de contato: 15 minutos</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check-4-4" class="checklist-check" data-etapa="4"
+                                onchange="updateProgresso()">
+                            <label for="check-4-4">Mergulhar completamente todos os frutos</label>
+                        </div>
+                    </div>
+                    <div class="timer-container">
+                        <div class="timer-info">
+                            <i class="fas fa-clock"></i> Tempo de contato: <strong>15 minutos</strong>
+                        </div>
+                        <div class="timer-controls">
+                            <span class="timer-display" id="timer-display-4">15:00</span>
+                            <button class="btn-timer" onclick="startTimerForEtapa(4, 900)">
+                                <i class="fas fa-play"></i> Iniciar Cronômetro
+                            </button>
+                            <button class="btn-timer btn-timer-reset" onclick="resetTimer(4)">
+                                <i class="fas fa-redo"></i> Resetar
+                            </button>
+                        </div>
+                    </div>
+                    <button class="btn-secondary btn-calculadora" onclick="showPage('calculadora')">
+                        <i class="fas fa-calculator"></i> Ir para Calculadora de Cloração
+                    </button>
+                </div>
+
+                <!-- Etapa 5: Enxágue -->
+                <div class="etapa" data-etapa="5" data-checklist="enxague">
+                    <div class="etapa-header-wrapper">
+                        <div class="etapa-numero">5</div>
+                        <div class="etapa-conteudo">
+                            <h3><i class="fas fa-tint"></i> Enxágue</h3>
+                            <p>Enxágue abundantemente os frutos com água potável para remover resíduos de cloro.</p>
+                        </div>
+                        <div class="etapa-checklist-toggle">
+                            <input type="checkbox" id="check-etapa-5" class="check-etapa-concluida"
+                                onchange="toggleEtapaConcluida(5)">
+                            <label for="check-etapa-5" class="check-label">
+                                <i class="fas fa-check"></i>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="etapa-checklist">
+                        <h4><i class="fas fa-clipboard-list"></i> Checklist</h4>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check-5-1" class="checklist-check" data-etapa="5"
+                                onchange="updateProgresso()">
+                            <label for="check-5-1">Usar água potável corrente</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check-5-2" class="checklist-check" data-etapa="5"
+                                onchange="updateProgresso()">
+                            <label for="check-5-2">Enxaguar por pelo menos 3 minutos</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check-5-3" class="checklist-check" data-etapa="5"
+                                onchange="updateProgresso()">
+                            <label for="check-5-3">Drenar completamente a água</label>
+                        </div>
+                    </div>
+                    <div class="timer-container">
+                        <div class="timer-info">
+                            <i class="fas fa-clock"></i> Tempo mínimo: <strong>3 minutos</strong>
+                        </div>
+                        <div class="timer-controls">
+                            <span class="timer-display" id="timer-display-5">03:00</span>
+                            <button class="btn-timer" onclick="startTimerForEtapa(5, 180)">
+                                <i class="fas fa-play"></i> Iniciar Cronômetro
+                            </button>
+                            <button class="btn-timer btn-timer-reset" onclick="resetTimer(5)">
+                                <i class="fas fa-redo"></i> Resetar
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                <div class="etapa">
-                    <div class="etapa-numero">5</div>
-                    <div class="etapa-conteudo">
-                        <h3><i class="fas fa-tint"></i> Enxágue</h3>
-                        <p>Enxágue abundantemente os frutos com água potável para remover resíduos de cloro.</p>
-                        <ul>
-                            <li>Use água potável corrente</li>
-                            <li>Enxágue por pelo menos 3 minutos</li>
-                            <li>Drene completamente a água</li>
-                        </ul>
+                <!-- Etapa 6: Branqueamento (Choque Térmico) - CRÍTICA -->
+                <div class="etapa etapa-critica" data-etapa="6" data-checklist="branqueamento" data-tempo="10">
+                    <div class="etapa-header-wrapper">
+                        <div class="etapa-numero">6</div>
+                        <div class="etapa-conteudo">
+                            <h3><i class="fas fa-thermometer-half"></i> Branqueamento (Choque Térmico) <span
+                                    class="badge-critica">⚠️ CRÍTICA</span></h3>
+                            <p class="text-critico">Essencial para inativar o protozoário causador da doença de Chagas.
+                            </p>
+                        </div>
+                        <div class="etapa-checklist-toggle">
+                            <input type="checkbox" id="check-etapa-6" class="check-etapa-concluida"
+                                onchange="toggleEtapaConcluida(6)">
+                            <label for="check-etapa-6" class="check-label">
+                                <i class="fas fa-check"></i>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="etapa-checklist">
+                        <h4><i class="fas fa-clipboard-list"></i> Checklist</h4>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check-6-1" class="checklist-check" data-etapa="6"
+                                onchange="updateProgresso()">
+                            <label for="check-6-1">Aquecer água até 80°C</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check-6-2" class="checklist-check" data-etapa="6"
+                                onchange="updateProgresso()">
+                            <label for="check-6-2">Mergulhar os frutos por exatamente 10 segundos</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check-6-3" class="checklist-check" data-etapa="6"
+                                onchange="updateProgresso()">
+                            <label for="check-6-3">Usar termômetro para controlar a temperatura</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check-6-4" class="checklist-check" data-etapa="6"
+                                onchange="updateProgresso()">
+                            <label for="check-6-4">Resfriar imediatamente em água gelada</label>
+                        </div>
+                    </div>
+                    <div class="timer-container timer-critico">
+                        <div class="timer-info">
+                            <i class="fas fa-thermometer-three-quarters"></i> Temperatura: <strong>80°C</strong> |
+                            Tempo: <strong>10 segundos</strong>
+                        </div>
+                        <div class="timer-controls">
+                            <span class="timer-display timer-grande" id="timer-display-6">00:10</span>
+                            <button class="btn-timer btn-timer-grande" onclick="startTimerForEtapa(6, 10)">
+                                <i class="fas fa-play"></i> Iniciar Cronômetro
+                            </button>
+                            <button class="btn-timer btn-timer-reset" onclick="resetTimer(6)">
+                                <i class="fas fa-redo"></i> Resetar
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                <div class="etapa etapa-critica">
-                    <div class="etapa-numero">6</div>
-                    <div class="etapa-conteudo">
-                        <h3><i class="fas fa-thermometer-half"></i> Branqueamento (Choque Térmico)</h3>
-                        <p class="text-critico"><strong>ETAPA CRÍTICA!</strong> Essencial para inativar o protozoário causador da doença de Chagas.</p>
-                        <ul>
-                            <li>Aqueça água até 80°C</li>
-                            <li>Mergulhe os frutos por exatamente 10 segundos</li>
-                            <li>Use termômetro para controlar a temperatura</li>
-                            <li>Resfrie imediatamente em água gelada</li>
-                        </ul>
-                        <button class="btn-secondary" onclick="startTimer(10)">
-                            <i class="fas fa-stopwatch"></i> Iniciar Cronômetro (10s)
-                        </button>
-                        <div id="timerDisplay" class="timer-display" style="display: none;"></div>
+                <!-- Etapa 7: Despolpamento -->
+                <div class="etapa" data-etapa="7" data-checklist="despolpamento">
+                    <div class="etapa-header-wrapper">
+                        <div class="etapa-numero">7</div>
+                        <div class="etapa-conteudo">
+                            <h3><i class="fas fa-blender"></i> Despolpamento</h3>
+                            <p>Processe os frutos na despolpadeira para obter a polpa de açaí.</p>
+                        </div>
+                        <div class="etapa-checklist-toggle">
+                            <input type="checkbox" id="check-etapa-7" class="check-etapa-concluida"
+                                onchange="toggleEtapaConcluida(7)">
+                            <label for="check-etapa-7" class="check-label">
+                                <i class="fas fa-check"></i>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="etapa-checklist">
+                        <h4><i class="fas fa-clipboard-list"></i> Checklist</h4>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check-7-1" class="checklist-check" data-etapa="7"
+                                onchange="updateProgresso()">
+                            <label for="check-7-1">Usar despolpadeira em aço inoxidável</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check-7-2" class="checklist-check" data-etapa="7"
+                                onchange="updateProgresso()">
+                            <label for="check-7-2">Equipamento deve estar limpo e sanitizado</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check-7-3" class="checklist-check" data-etapa="7"
+                                onchange="updateProgresso()">
+                            <label for="check-7-3">Adicionar água potável conforme necessário</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check-7-4" class="checklist-check" data-etapa="7"
+                                onchange="updateProgresso()">
+                            <label for="check-7-4">Obter a consistência desejada (grosso, médio ou fino)</label>
+                        </div>
                     </div>
                 </div>
 
-                <div class="etapa">
-                    <div class="etapa-numero">7</div>
-                    <div class="etapa-conteudo">
-                        <h3><i class="fas fa-blender"></i> Despolpamento</h3>
-                        <p>Processe os frutos na despolpadeira para obter a polpa de açaí.</p>
-                        <ul>
-                            <li>Use despolpadeira em aço inoxidável</li>
-                            <li>Equipamento deve estar limpo e sanitizado</li>
-                            <li>Adicione água potável conforme necessário</li>
-                            <li>Obtenha a consistência desejada (grosso, médio ou fino)</li>
-                        </ul>
+                <!-- Etapa 8: Envase -->
+                <div class="etapa" data-etapa="8" data-checklist="envase">
+                    <div class="etapa-header-wrapper">
+                        <div class="etapa-numero">8</div>
+                        <div class="etapa-conteudo">
+                            <h3><i class="fas fa-box"></i> Envase</h3>
+                            <p>Acondicione a polpa de açaí em embalagens adequadas e higienizadas.</p>
+                        </div>
+                        <div class="etapa-checklist-toggle">
+                            <input type="checkbox" id="check-etapa-8" class="check-etapa-concluida"
+                                onchange="toggleEtapaConcluida(8)">
+                            <label for="check-etapa-8" class="check-label">
+                                <i class="fas fa-check"></i>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="etapa-checklist">
+                        <h4><i class="fas fa-clipboard-list"></i> Checklist</h4>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check-8-1" class="checklist-check" data-etapa="8"
+                                onchange="updateProgresso()">
+                            <label for="check-8-1">Usar embalagens próprias para alimentos</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check-8-2" class="checklist-check" data-etapa="8"
+                                onchange="updateProgresso()">
+                            <label for="check-8-2">Identificar com data de produção e validade</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check-8-3" class="checklist-check" data-etapa="8"
+                                onchange="updateProgresso()">
+                            <label for="check-8-3">Armazenar imediatamente sob refrigeração (até -18°C se
+                                congelado)</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" id="check-8-4" class="checklist-check" data-etapa="8"
+                                onchange="updateProgresso()">
+                            <label for="check-8-4">Registrar o lote produzido</label>
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="etapa">
-                    <div class="etapa-numero">8</div>
-                    <div class="etapa-conteudo">
-                        <h3><i class="fas fa-box"></i> Envase</h3>
-                        <p>Acondicione a polpa de açaí em embalagens adequadas e higienizadas.</p>
-                        <ul>
-                            <li>Use embalagens próprias para alimentos</li>
-                            <li>Identifique com data de produção e validade</li>
-                            <li>Armazene imediatamente sob refrigeração (até -18°C se congelado)</li>
-                            <li>Registre o lote produzido</li>
-                        </ul>
-                    </div>
+            <!-- Navegação do Modo Passo a Passo -->
+            <div class="step-by-step-nav" id="stepByStepNav" style="display: none;">
+                <button class="btn-step-nav" onclick="previousEtapa()" id="btnPrevEtapa" disabled>
+                    <i class="fas fa-chevron-left"></i> Anterior
+                </button>
+                <div class="step-indicators" id="stepIndicators">
+                    <!-- Preenchido via JS -->
                 </div>
+                <button class="btn-step-nav" onclick="nextEtapa()" id="btnNextEtapa">
+                    Próximo <i class="fas fa-chevron-right"></i>
+                </button>
             </div>
         </div>
 
@@ -337,7 +834,7 @@
                 <i class="fas fa-arrow-left"></i> Voltar
             </button>
             <h2>Equipamentos e Utensílios</h2>
-            
+
             <div class="equipamentos-grid">
                 <div class="equipamento-card">
                     <i class="fas fa-blender-phone"></i>
@@ -441,7 +938,7 @@
             </button>
             <h2>Check-list de Boas Práticas</h2>
             <p class="info-text">
-                <i class="fas fa-info-circle"></i> 
+                <i class="fas fa-info-circle"></i>
                 Preencha este check-list diariamente antes de iniciar a produção
             </p>
 
@@ -449,169 +946,171 @@
                 <i class="fas fa-check-circle"></i>
                 <strong>Check-list de hoje já foi preenchido!</strong>
                 <p>Você já preencheu o check-list de hoje. Volte amanhã para continuar suas práticas diárias.</p>
-                <p><small>Lembre-se: o check-list deve ser preenchido por 7 dias consecutivos para obter o Selo Prata.</small></p>
+                <p><small>Lembre-se: o check-list deve ser preenchido por 7 dias consecutivos para obter o Selo
+                        Prata.</small></p>
+            </div>
+
+            <!-- Barra de Score Moderna -->
+            <div class="checklist-hero-score">
+                <div class="score-info">
+                    <h4>Conformidade BPF</h4>
+                    <div class="score-value" id="bpfScoreValue">0%</div>
+                </div>
+                <div class="score-progress-container">
+                    <div class="score-progress-bar" id="bpfScoreBar"></div>
+                </div>
+                <div class="category-badge" id="bpfStatusBadge">Pendente</div>
             </div>
 
             <form id="formChecklist">
-                <div class="checklist-section">
-                    <h3><i class="fas fa-user-check"></i> Higiene do Manipulador</h3>
-                    <div class="checklist-item">
-                        <label>
-                            <input type="checkbox" name="higiene" value="1">
-                            Unhas curtas, limpas e sem esmalte
-                        </label>
+                <div class="checklist-grid-modern">
+                    <!-- Higiene do Manipulador -->
+                    <div class="checklist-card-modern" style="animation-delay: 0.1s">
+                        <div class="card-title-modern">
+                            <h3><i class="fas fa-user-check"></i> Higiene</h3>
+                            <span class="category-badge" id="badge-higiene">0/5</span>
+                        </div>
+                        <div class="checklist-items-modern">
+                            <label class="checklist-item-modern">
+                                <input type="checkbox" name="higiene" value="1" onchange="updateBPFProgress()">
+                                <span>Unhas curtas, limpas e sem esmalte</span>
+                            </label>
+                            <label class="checklist-item-modern">
+                                <input type="checkbox" name="higiene" value="2" onchange="updateBPFProgress()">
+                                <span>Ausência de adornos</span>
+                            </label>
+                            <label class="checklist-item-modern">
+                                <input type="checkbox" name="higiene" value="3" onchange="updateBPFProgress()">
+                                <span>Uniforme limpo e touca</span>
+                            </label>
+                            <label class="checklist-item-modern">
+                                <input type="checkbox" name="higiene" value="4" onchange="updateBPFProgress()">
+                                <span>Mãos lavadas e sanitizadas</span>
+                            </label>
+                            <label class="checklist-item-modern">
+                                <input type="checkbox" name="higiene" value="5" onchange="updateBPFProgress()">
+                                <span>Ausência de ferimentos/doenças</span>
+                            </label>
+                        </div>
                     </div>
-                    <div class="checklist-item">
-                        <label>
-                            <input type="checkbox" name="higiene" value="2">
-                            Ausência de adornos (anéis, pulseiras, relógios)
-                        </label>
+
+                    <!-- Limpeza do Ambiente -->
+                    <div class="checklist-card-modern" style="animation-delay: 0.2s">
+                        <div class="card-title-modern">
+                            <h3><i class="fas fa-broom"></i> Ambiente</h3>
+                            <span class="category-badge" id="badge-ambiente">0/6</span>
+                        </div>
+                        <div class="checklist-items-modern">
+                            <label class="checklist-item-modern">
+                                <input type="checkbox" name="ambiente" value="1" onchange="updateBPFProgress()">
+                                <span>Piso limpo e seco</span>
+                            </label>
+                            <label class="checklist-item-modern">
+                                <input type="checkbox" name="ambiente" value="2" onchange="updateBPFProgress()">
+                                <span>Paredes e teto sem sujidades</span>
+                            </label>
+                            <label class="checklist-item-modern">
+                                <input type="checkbox" name="ambiente" value="3" onchange="updateBPFProgress()">
+                                <span>Bancadas sanitizadas</span>
+                            </label>
+                            <label class="checklist-item-modern">
+                                <input type="checkbox" name="ambiente" value="4" onchange="updateBPFProgress()">
+                                <span>Lixeiras com tampa e saco</span>
+                            </label>
+                            <label class="checklist-item-modern">
+                                <input type="checkbox" name="ambiente" value="5" onchange="updateBPFProgress()">
+                                <span>Iluminação adequada</span>
+                            </label>
+                            <label class="checklist-item-modern">
+                                <input type="checkbox" name="ambiente" value="6" onchange="updateBPFProgress()">
+                                <span>Ventilação adequada</span>
+                            </label>
+                        </div>
                     </div>
-                    <div class="checklist-item">
-                        <label>
-                            <input type="checkbox" name="higiene" value="3">
-                            Uniformizado com avental limpo e touca
-                        </label>
+
+                    <!-- Controle de Pragas -->
+                    <div class="checklist-card-modern" style="animation-delay: 0.3s">
+                        <div class="card-title-modern">
+                            <h3><i class="fas fa-bug"></i> Pragas</h3>
+                            <span class="category-badge" id="badge-pragas">0/4</span>
+                        </div>
+                        <div class="checklist-items-modern">
+                            <label class="checklist-item-modern">
+                                <input type="checkbox" name="pragas" value="1" onchange="updateBPFProgress()">
+                                <span>Ausência de insetos voadores</span>
+                            </label>
+                            <label class="checklist-item-modern">
+                                <input type="checkbox" name="pragas" value="2" onchange="updateBPFProgress()">
+                                <span>Ausência de roedores</span>
+                            </label>
+                            <label class="checklist-item-modern">
+                                <input type="checkbox" name="pragas" value="3" onchange="updateBPFProgress()">
+                                <span>Telas em portas e janelas</span>
+                            </label>
+                            <label class="checklist-item-modern">
+                                <input type="checkbox" name="pragas" value="4" onchange="updateBPFProgress()">
+                                <span>Ralos com proteção/fechamento</span>
+                            </label>
+                        </div>
                     </div>
-                    <div class="checklist-item">
-                        <label>
-                            <input type="checkbox" name="higiene" value="4">
-                            Mãos lavadas e sanitizadas
-                        </label>
+
+                    <!-- Qualidade da Água -->
+                    <div class="checklist-card-modern" style="animation-delay: 0.4s">
+                        <div class="card-title-modern">
+                            <h3><i class="fas fa-tint"></i> Água</h3>
+                            <span class="category-badge" id="badge-agua">0/3</span>
+                        </div>
+                        <div class="checklist-items-modern">
+                            <label class="checklist-item-modern">
+                                <input type="checkbox" name="agua" value="1" onchange="updateBPFProgress()">
+                                <span>Caixa d'água tampada e limpa</span>
+                            </label>
+                            <label class="checklist-item-modern">
+                                <input type="checkbox" name="agua" value="2" onchange="updateBPFProgress()">
+                                <span>Água tratada ou clorada</span>
+                            </label>
+                            <label class="checklist-item-modern">
+                                <input type="checkbox" name="agua" value="3" onchange="updateBPFProgress()">
+                                <span>Mangueiras e tanques limpos</span>
+                            </label>
+                        </div>
                     </div>
-                    <div class="checklist-item">
-                        <label>
-                            <input type="checkbox" name="higiene" value="5">
-                            Ausência de ferimentos ou doenças
-                        </label>
+
+                    <!-- Equipamentos e Utensílios -->
+                    <div class="checklist-card-modern" style="animation-delay: 0.5s">
+                        <div class="card-title-modern">
+                            <h3><i class="fas fa-tools"></i> Utensílios</h3>
+                            <span class="category-badge" id="badge-equipamentos">0/4</span>
+                        </div>
+                        <div class="checklist-items-modern">
+                            <label class="checklist-item-modern">
+                                <input type="checkbox" name="equipamentos" value="1" onchange="updateBPFProgress()">
+                                <span>Despolpadeira sanitizada</span>
+                            </label>
+                            <label class="checklist-item-modern">
+                                <input type="checkbox" name="equipamentos" value="2" onchange="updateBPFProgress()">
+                                <span>Cestos e baldes limpos</span>
+                            </label>
+                            <label class="checklist-item-modern">
+                                <input type="checkbox" name="equipamentos" value="3" onchange="updateBPFProgress()">
+                                <span>Afastados de produtos químicos</span>
+                            </label>
+                            <label class="checklist-item-modern">
+                                <input type="checkbox" name="equipamentos" value="4" onchange="updateBPFProgress()">
+                                <span>Em bom estado de conservação</span>
+                            </label>
+                        </div>
                     </div>
                 </div>
 
-                <div class="checklist-section">
-                    <h3><i class="fas fa-broom"></i> Limpeza do Ambiente</h3>
-                    <div class="checklist-item">
-                        <label>
-                            <input type="checkbox" name="ambiente" value="1">
-                            Piso limpo e seco
-                        </label>
-                    </div>
-                    <div class="checklist-item">
-                        <label>
-                            <input type="checkbox" name="ambiente" value="2">
-                            Paredes e teto sem sujidades
-                        </label>
-                    </div>
-                    <div class="checklist-item">
-                        <label>
-                            <input type="checkbox" name="ambiente" value="3">
-                            Bancadas e superfícies sanitizadas
-                        </label>
-                    </div>
-                    <div class="checklist-item">
-                        <label>
-                            <input type="checkbox" name="ambiente" value="4">
-                            Lixeiras com tampa e saco plástico
-                        </label>
-                    </div>
-                    <div class="checklist-item">
-                        <label>
-                            <input type="checkbox" name="ambiente" value="5">
-                            Iluminação adequada
-                        </label>
-                    </div>
-                    <div class="checklist-item">
-                        <label>
-                            <input type="checkbox" name="ambiente" value="6">
-                            Ventilação adequada
-                        </label>
-                    </div>
+                <div class="obs-modern" style="animation-delay: 0.6s">
+                    <label for="observacoes"><i class="fas fa-comment-dots"></i> Observações Adicionais</label>
+                    <textarea id="observacoes" name="observacoes"
+                        placeholder="Caso haja alguma não conformidade ou observação relevante, descreva aqui..."></textarea>
                 </div>
 
-                <div class="checklist-section">
-                    <h3><i class="fas fa-bug"></i> Controle de Pragas</h3>
-                    <div class="checklist-item">
-                        <label>
-                            <input type="checkbox" name="pragas" value="1">
-                            Ausência de insetos voadores
-                        </label>
-                    </div>
-                    <div class="checklist-item">
-                        <label>
-                            <input type="checkbox" name="pragas" value="2">
-                            Ausência de roedores
-                        </label>
-                    </div>
-                    <div class="checklist-item">
-                        <label>
-                            <input type="checkbox" name="pragas" value="3">
-                            Telas em janelas e aberturas
-                        </label>
-                    </div>
-                    <div class="checklist-item">
-                        <label>
-                            <input type="checkbox" name="pragas" value="4">
-                            Ralos com tampas ou telas
-                        </label>
-                    </div>
-                </div>
-
-                <div class="checklist-section">
-                    <h3><i class="fas fa-tint"></i> Qualidade da Água</h3>
-                    <div class="checklist-item">
-                        <label>
-                            <input type="checkbox" name="agua" value="1">
-                            Água potável disponível
-                        </label>
-                    </div>
-                    <div class="checklist-item">
-                        <label>
-                            <input type="checkbox" name="agua" value="2">
-                            Reservatório limpo (se houver)
-                        </label>
-                    </div>
-                    <div class="checklist-item">
-                        <label>
-                            <input type="checkbox" name="agua" value="3">
-                            Análise da água em dia (últimos 6 meses)
-                        </label>
-                    </div>
-                </div>
-
-                <div class="checklist-section">
-                    <h3><i class="fas fa-wrench"></i> Manutenção dos Equipamentos</h3>
-                    <div class="checklist-item">
-                        <label>
-                            <input type="checkbox" name="equipamentos" value="1">
-                            Equipamentos limpos e sanitizados
-                        </label>
-                    </div>
-                    <div class="checklist-item">
-                        <label>
-                            <input type="checkbox" name="equipamentos" value="2">
-                            Equipamentos em bom estado de funcionamento
-                        </label>
-                    </div>
-                    <div class="checklist-item">
-                        <label>
-                            <input type="checkbox" name="equipamentos" value="3">
-                            Freezer na temperatura adequada (-18°C)
-                        </label>
-                    </div>
-                    <div class="checklist-item">
-                        <label>
-                            <input type="checkbox" name="equipamentos" value="4">
-                            Utensílios organizados e protegidos
-                        </label>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="observacoes">Observações (opcional)</label>
-                    <textarea id="observacoes" rows="4"></textarea>
-                </div>
-
-                <button type="submit" class="btn-primary btn-large">
-                    <i class="fas fa-save"></i> Salvar Check-list
+                <button type="submit" class="btn-primary btn-large btn-submit-modern">
+                    <i class="fas fa-save"></i> Salvar Check-list Diário
                 </button>
             </form>
 
@@ -630,7 +1129,7 @@
             </button>
             <h2>Sistema de Certificação</h2>
             <p class="info-text">
-                <i class="fas fa-info-circle"></i> 
+                <i class="fas fa-info-circle"></i>
                 Os selos certificam seu comprometimento com a qualidade e segurança alimentar
             </p>
 
@@ -664,6 +1163,10 @@
                         <li class="requisito" data-completo="false">
                             <i class="fas fa-circle"></i>
                             <span>Processamento correto (todas as etapas)</span>
+                        </li>
+                        <li class="requisito" data-completo="false">
+                            <i class="fas fa-circle"></i>
+                            <span>Cadastro validado pela vigilância sanitária</span>
                         </li>
                     </ul>
                     <div class="progresso-selo">
@@ -762,7 +1265,8 @@
         </div>
     </div>
 
-    <script src="js/database.js?v=4"></script>
-    <script src="js/app.js?v=4"></script>
+
+    <script type="module" src="js/app.js?v=21"></script>
 </body>
+
 </html>

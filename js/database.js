@@ -1,10 +1,9 @@
-// Database.js - Gerenciamento de dados usando API REST + localStorage como cache
+import { auth } from './modules/auth.js';
 
 class Database {
     constructor() {
         this.apiUrl = 'http://localhost:3000/api';
         this.storage = window.localStorage;
-        this.userCPF = null; // CPF do usuário logado
     }
 
     // Método helper para fazer requisições à API
@@ -16,6 +15,12 @@ class Database {
                     'Content-Type': 'application/json',
                 }
             };
+
+            // Adicionar Token JWT do módulo de auth
+            const token = auth.getToken();
+            if (token) {
+                options.headers['Authorization'] = `Bearer ${token}`;
+            }
 
             if (data) {
                 options.body = JSON.stringify(data);
@@ -31,29 +36,22 @@ class Database {
             return result;
         } catch (error) {
             console.error('Erro na API:', error);
-            // Fallback para localStorage em caso de erro
-            console.warn('Usando fallback LocalStorage');
             throw error;
         }
     }
 
-    // Obter ID do usuário logado (salvo após login)
+    // Obter ID do usuário logado do módulo de auth
     getUsuarioId() {
-        const u = this.storage.getItem('usuario');
-        if (!u) return null;
-        try { return JSON.parse(u).id; } catch { return null; }
+        const u = auth.getUsuario();
+        return u ? u.id : null;
     }
 
     // Obter CPF do usuário (armazenado localmente)
     getUserCPF() {
-        if (!this.userCPF) {
-            this.userCPF = this.storage.getItem('userCPF');
-        }
-        return this.userCPF;
+        return this.storage.getItem('userCPF');
     }
 
     setUserCPF(cpf) {
-        this.userCPF = cpf;
         this.storage.setItem('userCPF', cpf);
     }
 
@@ -61,20 +59,16 @@ class Database {
 
     async saveCadastro(data) {
         try {
-            // Incluir usuario_id para vincular ao login
             const usuarioId = this.getUsuarioId();
             const payload = { ...data, usuarioId };
             const result = await this.apiRequest('/batedor', 'POST', payload);
-            
-            // Armazenar CPF do usuário
+
             this.setUserCPF(data.cpf);
-            
-            // Cache local
             this.storage.setItem('cadastro', JSON.stringify(data));
-            
+
             return result;
         } catch (error) {
-            // Fallback: salvar apenas localmente
+            // Fallback local em caso de erro de rede
             this.storage.setItem('cadastro', JSON.stringify(data));
             this.setUserCPF(data.cpf);
             return { success: true, data: data, offline: true };
@@ -83,19 +77,13 @@ class Database {
 
     async getCadastro() {
         const cpf = this.getUserCPF();
+        const usuarioId = this.getUsuarioId();
 
-        // 1. Tentar buscar por CPF (mais rápido, usa cache local)
-        if (!cpf) {
-            const local = this.storage.getItem('cadastro');
-            if (local) return JSON.parse(local);
-        }
-
-        // 2. Tentar API com CPF
+        // 1. Tentar buscar por CPF no cache
         if (cpf && cpf !== 'null') {
             try {
                 const result = await this.apiRequest(`/batedor/${cpf}`);
                 this.storage.setItem('cadastro', JSON.stringify(result.data));
-                // Garantir que CPF fica salvo
                 this.setUserCPF(result.data.cpf);
                 return result.data;
             } catch (error) {
@@ -104,8 +92,7 @@ class Database {
             }
         }
 
-        // 3. Fallback: buscar pela conta de usuário logado (usuario_id)
-        const usuarioId = this.getUsuarioId();
+        // 2. Fallback: buscar pela conta de usuário logado
         if (usuarioId) {
             try {
                 const result = await this.apiRequest(`/meu-cadastro/${usuarioId}`);
@@ -114,67 +101,45 @@ class Database {
                     this.setUserCPF(result.data.cpf);
                     return result.data;
                 }
-            } catch (error) {
-                // servidor indisponível
-            }
+            } catch (error) { }
         }
 
-        return null;
+        const local = this.storage.getItem('cadastro');
+        return local ? JSON.parse(local) : null;
     }
 
     // ==================== CHECK-LISTS ====================
 
     async saveChecklist(checklist) {
         const cpf = this.getUserCPF();
-        
         if (!cpf || cpf === 'null') {
             throw new Error('CPF não encontrado. Complete seu cadastro antes de preencher o check-list.');
         }
-        
+
         try {
-            const data = {
-                cpf: cpf,
-                ...checklist
-            };
-            
+            const data = { cpf, ...checklist };
             const result = await this.apiRequest('/checklist', 'POST', data);
-            
-            // Atualizar cache local
+
             const checklists = this.getChecklistsFromCache();
-            checklists.push(checklist);
+            checklists.push(result.data || checklist);
             this.storage.setItem('checklists', JSON.stringify(checklists));
-            
+
             return result;
         } catch (error) {
-            // Se for erro de check-list diário, propagar o erro
-            if (error.codigo === 'CHECKLIST_DIARIO_JA_PREENCHIDO') {
-                throw error;
-            }
-            
-            // Para outros erros, propagar também para debug
-            console.error('Erro ao salvar check-list:', error);
+            if (error.message.includes('preenchido')) throw error;
             throw error;
         }
     }
 
     async getChecklists() {
         const cpf = this.getUserCPF();
-        
-        if (!cpf) {
-            return { data: this.getChecklistsFromCache(), preenchidoHoje: false };
-        }
+        if (!cpf) return { data: this.getChecklistsFromCache(), preenchidoHoje: false };
 
         try {
             const result = await this.apiRequest(`/checklists/${cpf}`);
-            
-            // Atualizar cache
-            if (result.data) {
-                this.storage.setItem('checklists', JSON.stringify(result.data));
-            }
-            
-            return result; // Retorna o objeto completo com preenchidoHoje
+            if (result.data) this.storage.setItem('checklists', JSON.stringify(result.data));
+            return result;
         } catch (error) {
-            // Fallback: usar cache local
             return { data: this.getChecklistsFromCache(), preenchidoHoje: false };
         }
     }
@@ -186,28 +151,16 @@ class Database {
 
     async getRecentChecklists(days) {
         const cpf = this.getUserCPF();
-        if (!cpf || cpf === 'null') {
-            // Não faz requisição se CPF não estiver definido
-            console.warn('CPF do usuário não definido. Não é possível buscar checklists.');
-            return [];
-        }
+        if (!cpf || cpf === 'null') return [];
+
         try {
             const result = await this.apiRequest(`/checklists/${cpf}?dias=${days}`);
-            // Retornar os dados da API (result.data é o array de check-lists)
-            if (result && result.data) {
-                return result.data;
-            }
-            return [];
+            return result.data || [];
         } catch (error) {
-            console.warn('Erro ao buscar checklists da API, usando fallback local:', error);
-            // Fallback: filtrar cache local apenas em caso de erro de conexão
             const checklists = this.getChecklistsFromCache();
             const cutoffDate = new Date();
             cutoffDate.setDate(cutoffDate.getDate() - days);
-            return checklists.filter(c => {
-                const checkDate = new Date(c.data || c.data_checklist);
-                return checkDate >= cutoffDate;
-            });
+            return checklists.filter(c => new Date(c.data_checklist || c.data) >= cutoffDate);
         }
     }
 
@@ -215,25 +168,16 @@ class Database {
 
     async saveCalculation(calculation) {
         const cpf = this.getUserCPF();
-        
         try {
-            const data = {
-                cpf: cpf,
-                quantidadeAgua: calculation.quantidadeAgua,
-                concentracaoCloro: calculation.concentracaoCloro,
-                resultado: calculation.resultado
-            };
-            
+            const data = { cpf, ...calculation };
             const result = await this.apiRequest('/calculo', 'POST', data);
-            
-            // Atualizar cache
+
             const calculations = this.getCalculationsFromCache();
-            calculations.push(calculation);
+            calculations.push(result.data || calculation);
             this.storage.setItem('calculations', JSON.stringify(calculations));
-            
+
             return result;
         } catch (error) {
-            // Fallback: salvar localmente
             const calculations = this.getCalculationsFromCache();
             calculations.push(calculation);
             this.storage.setItem('calculations', JSON.stringify(calculations));
@@ -248,17 +192,11 @@ class Database {
 
     async getCalculations() {
         const cpf = this.getUserCPF();
-        
-        if (!cpf) {
-            return this.getCalculationsFromCache();
-        }
+        if (!cpf) return this.getCalculationsFromCache();
 
         try {
             const result = await this.apiRequest(`/calculos/${cpf}`);
-            
-            // Atualizar cache
             this.storage.setItem('calculations', JSON.stringify(result.data));
-            
             return result.data;
         } catch (error) {
             return this.getCalculationsFromCache();
@@ -269,21 +207,11 @@ class Database {
 
     async saveSelo(selo) {
         const cpf = this.getUserCPF();
-        
         try {
-            const data = {
-                cpf: cpf,
-                tipo: selo.tipo
-            };
-            
-            const result = await this.apiRequest('/selo', 'POST', data);
-            
-            // Atualizar cache
-            this.storage.setItem('selo', JSON.stringify(selo));
-            
+            const result = await this.apiRequest('/selo', 'POST', { cpf, tipo: selo.tipo });
+            this.storage.setItem('selo', JSON.stringify(result.data || selo));
             return result;
         } catch (error) {
-            // Fallback
             this.storage.setItem('selo', JSON.stringify(selo));
             return { success: true, data: selo, offline: true };
         }
@@ -291,7 +219,6 @@ class Database {
 
     async getSelo() {
         const cpf = this.getUserCPF();
-        
         if (!cpf) {
             const data = this.storage.getItem('selo');
             return data ? JSON.parse(data) : null;
@@ -299,12 +226,7 @@ class Database {
 
         try {
             const result = await this.apiRequest(`/selo/${cpf}`);
-            
-            // Atualizar cache
-            if (result.data) {
-                this.storage.setItem('selo', JSON.stringify(result.data));
-            }
-            
+            if (result.data) this.storage.setItem('selo', JSON.stringify(result.data));
             return result.data;
         } catch (error) {
             const data = this.storage.getItem('selo');
@@ -316,78 +238,46 @@ class Database {
 
     async getRequisitosFromAPI() {
         const cpf = this.getUserCPF();
-        
-        console.log('getRequisitosFromAPI() - CPF:', cpf);
-        
-        if (!cpf || cpf === 'null') {
-            console.log('getRequisitosFromAPI() - CPF inválido, retornando null');
-            return null;
-        }
-        
+        if (!cpf || cpf === 'null') return null;
+
         try {
             const result = await this.apiRequest(`/requisitos/${cpf}`);
-            console.log('getRequisitosFromAPI() - Resultado da API:', result);
-            
             if (result && result.data) {
-                // Atualizar localStorage com dados do servidor
                 result.data.forEach(req => {
                     const key = `requisito_${req.tipo_selo}_${req.numero_requisito}`;
-                    const newValue = req.status.toString();
-                    console.log(`Atualizando localStorage["${key}"] = "${newValue}"`);
-                    this.storage.setItem(key, newValue);
+                    this.storage.setItem(key, req.status.toString());
                 });
                 return result.data;
             }
-            console.log('getRequisitosFromAPI() - Sem dados na resposta');
             return null;
         } catch (error) {
-            console.warn('Erro ao buscar requisitos da API:', error);
             return null;
         }
     }
 
     async saveRequisitoStatus(tipo, requisito, status) {
         const cpf = this.getUserCPF();
-        
         try {
-            const data = {
-                cpf: cpf,
-                tipoSelo: tipo,
-                numeroRequisito: requisito,
-                status: status
-            };
-            
-            const result = await this.apiRequest('/requisito', 'POST', data);
-            
-            // Atualizar cache
-            const key = `requisito_${tipo}_${requisito}`;
-            this.storage.setItem(key, status);
-            
+            const result = await this.apiRequest('/requisito', 'POST', {
+                cpf, tipoSelo: tipo, numeroRequisito: requisito, status
+            });
+            this.storage.setItem(`requisito_${tipo}_${requisito}`, status);
             return result;
         } catch (error) {
-            // Fallback
-            const key = `requisito_${tipo}_${requisito}`;
-            this.storage.setItem(key, status);
+            this.storage.setItem(`requisito_${tipo}_${requisito}`, status);
             return { success: true, offline: true };
         }
     }
 
     getRequisitoStatus(tipo, requisito) {
-        const key = `requisito_${tipo}_${requisito}`;
-        const value = this.storage.getItem(key);
-        console.log(`getRequisitoStatus(${tipo}, ${requisito}): localStorage["${key}"] = "${value}" → ${value === 'true'}`);
-        return value === 'true';
+        return this.storage.getItem(`requisito_${tipo}_${requisito}`) === 'true';
     }
 
     // ==================== ESTATÍSTICAS ====================
 
     async getEstatisticas() {
         const cpf = this.getUserCPF();
-        
-        if (!cpf) {
-            return null;
-        }
-
+        if (!cpf) return null;
         try {
             const result = await this.apiRequest(`/estatisticas/${cpf}`);
             return result.data;
@@ -398,16 +288,14 @@ class Database {
 
     // ==================== UTILITÁRIOS ====================
 
-    // Limpar dados (para testes)
     clearAll() {
+        auth.logout();
         this.storage.clear();
-        this.userCPF = null;
     }
 
-    // Verificar conexão com API
     async checkConnection() {
         try {
-            const response = await fetch('http://localhost:3000/');
+            const response = await fetch(`${this.apiUrl}/../`, { method: 'HEAD' });
             return response.ok;
         } catch (error) {
             return false;
@@ -415,5 +303,4 @@ class Database {
     }
 }
 
-// Instância global do database
-const db = new Database();
+export const db = new Database();
