@@ -2,7 +2,10 @@ import { auth } from './modules/auth.js';
 import { formatarData, formatarDataHora, debounce } from './modules/utils.js';
 import { ui } from './modules/ui.js';
 
-const API_URL = 'http://localhost:3000/api';
+const hostname = window.location.hostname;
+const API_URL = (hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '')
+    ? 'http://localhost:3000/api'
+    : '/api';
 
 // Estado global
 let gestorLogado = null;
@@ -358,7 +361,7 @@ function renderizarTabInfo() {
                 <label>Alvará</label>
                 <div class="value">${b.alvara}</div>
                 ${b.alvara_foto ? `
-                    <div class="document-preview" onclick="visualizarDocumento('${b.alvara_foto}')">
+                    <div class="document-preview" data-action="visualizar-documento" data-base64="${b.alvara_foto}">
                         <img src="${b.alvara_foto}" alt="Miniatura do Alvará" style="max-width: 100px; cursor: pointer; border: 1px solid #ddd; border-radius: 4px; margin-top: 5px;">
                         <p style="font-size: 0.75rem; color: #666;"><i class="fas fa-search-plus"></i> Ver documento</p>
                     </div>
@@ -382,14 +385,25 @@ function renderizarTabInfo() {
 
         <div style="margin-top: 2rem;">
             <h3 style="margin-bottom: 1rem;">Alterar Status</h3>
+
+            ${(!b.alvara || !b.alvara_foto) ? `
+                <div style="margin-bottom: 1rem; padding: 0.75rem; background: #fff1f2; border: 1px solid #fecaca; border-radius: 8px; color: #991b1b; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>Este estabelecimento não pode ser aprovado pois o Número ou a Foto do Alvará não foram registrados.</span>
+                </div>
+            ` : ''}
+
             <div style="display: flex; gap: 1rem;">
-                <button onclick="alterarStatus(${b.id}, 'em_analise')" class="btn-secundario">
+                <button data-action="alterar-status" data-id="${b.id}" data-status="em_analise" class="btn-secundario">
                     <i class="fas fa-search"></i> Em Análise
                 </button>
-                <button onclick="alterarStatus(${b.id}, 'aprovado')" class="btn-primario" style="background: #16a34a;">
+                <button data-action="alterar-status" data-id="${b.id}" data-status="aprovado" 
+                        class="btn-primario" 
+                        style="background: ${(!b.alvara || !b.alvara_foto) ? '#94a3b8' : '#16a34a'}; cursor: ${(!b.alvara || !b.alvara_foto) ? 'not-allowed' : 'pointer'};"
+                        ${(!b.alvara || !b.alvara_foto) ? 'disabled title="Requisitos de alvará pendentes"' : ''}>
                     <i class="fas fa-check"></i> Aprovar
                 </button>
-                <button onclick="alterarStatus(${b.id}, 'reprovado')" class="btn-primario" style="background: #dc2626;">
+                <button data-action="alterar-status" data-id="${b.id}" data-status="reprovado" class="btn-primario" style="background: #dc2626;">
                     <i class="fas fa-times"></i> Reprovar
                 </button>
             </div>
@@ -564,7 +578,7 @@ function renderizarTabChecklists() {
                 ` : ''}
 
                 <div style="margin-top: 1rem; display: flex; justify-content: flex-end;">
-                    <button onclick="editarChecklist(${c.id})" class="btn-secundario">
+                    <button data-action="editar-checklist" data-id="${c.id}" class="btn-secundario">
                         <i class="fas fa-edit"></i> Editar Check-list
                     </button>
                 </div>
@@ -672,7 +686,7 @@ function adicionarPontoCritico() {
         lista.innerHTML = pontosCriticosTemp.map((p, i) => `
             <div class="item-lista">
                 <input type="text" value="${p}" readonly style="background: #f9fafb;">
-                <button type="button" class="btn-add-item" style="background: rgba(239, 68, 68, 0.1); color: #dc2626;" onclick="removerPontoCritico(${i})">
+                <button type="button" class="btn-remover-ponto" data-type="critico" data-index="${i}" style="background: rgba(239, 68, 68, 0.1); color: #dc2626; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
                     <i class="fas fa-trash"></i>
                 </button>
             </div>
@@ -685,7 +699,7 @@ function removerPontoCritico(index) {
     document.getElementById('pontosCriticosList').innerHTML = pontosCriticosTemp.map((p, i) => `
         <div class="item-lista">
             <input type="text" value="${p}" readonly style="background: #f9fafb;">
-            <button type="button" class="btn-add-item" style="background: rgba(239, 68, 68, 0.1); color: #dc2626;" onclick="removerPontoCritico(${i})">
+            <button type="button" class="btn-remover-ponto" data-type="critico" data-index="${i}" style="background: rgba(239, 68, 68, 0.1); color: #dc2626; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
                 <i class="fas fa-trash"></i>
             </button>
         </div>
@@ -704,7 +718,7 @@ function adicionarPontoPositivo() {
         lista.innerHTML = pontosPositivosTemp.map((p, i) => `
             <div class="item-lista">
                 <input type="text" value="${p}" readonly style="background: #f9fafb;">
-                <button type="button" class="btn-add-item" style="background: rgba(239, 68, 68, 0.1); color: #dc2626;" onclick="removerPontoPositivo(${i})">
+                <button type="button" class="btn-remover-ponto" data-type="positivo" data-index="${i}" style="background: rgba(239, 68, 68, 0.1); color: #dc2626; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
                     <i class="fas fa-trash"></i>
                 </button>
             </div>
@@ -717,7 +731,7 @@ function removerPontoPositivo(index) {
     document.getElementById('pontosPositivosList').innerHTML = pontosPositivosTemp.map((p, i) => `
         <div class="item-lista">
             <input type="text" value="${p}" readonly style="background: #f9fafb;">
-            <button type="button" class="btn-add-item" style="background: rgba(239, 68, 68, 0.1); color: #dc2626;" onclick="removerPontoPositivo(${i})">
+            <button type="button" class="btn-remover-ponto" data-type="positivo" data-index="${i}" style="background: rgba(239, 68, 68, 0.1); color: #dc2626; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
                 <i class="fas fa-trash"></i>
             </button>
         </div>
@@ -794,6 +808,14 @@ async function alterarStatus(batedorId, novoStatus) {
         'aprovado': 'Aprovado',
         'reprovado': 'Reprovado'
     }[novoStatus];
+    const b = batedorSelecionado?.batedor;
+
+    if (novoStatus === 'aprovado') {
+        if (!b?.alvara || !b?.alvara_foto) {
+            mostrarNotificacao('Não é possível aprovar sem o número e a foto do alvará registrados.', 'erro');
+            return;
+        }
+    }
 
     let motivoReprovacao = null;
     if (novoStatus === 'reprovado') {
@@ -913,11 +935,12 @@ document.head.appendChild(style);
 function setupEventListeners() {
     // Event delegation para botões dinâmicos na tabela (usa data-action)
     document.getElementById('tabelaBatedoresBody')?.addEventListener('click', (e) => {
-        const btn = e.target.closest('.btn-icon[data-action]');
+        const btn = e.target.closest('[data-action]');
         if (!btn) return;
         const action = btn.getAttribute('data-action');
         const id = btn.getAttribute('data-id');
-        if (!action || !id) return;
+        if (!action) return;
+
         switch (action) {
             case 'detalhes':
                 abrirDetalhes(id);
@@ -927,6 +950,38 @@ function setupEventListeners() {
                 break;
             case 'reprovar':
                 alterarStatus(id, 'reprovado');
+                break;
+        }
+    });
+
+    // Event delegation para o modal (tabInfo, tabChecklists, etc)
+    document.querySelector('.modal')?.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-action]');
+
+        if (!btn) {
+            // Caso especial para remoção de pontos que não usam data-action no padrão switch
+            const btnRemover = e.target.closest('.btn-remover-ponto');
+            if (btnRemover) {
+                const index = parseInt(btnRemover.dataset.index);
+                const type = btnRemover.dataset.type;
+                if (type === 'critico') removerPontoCritico(index);
+                else removerPontoPositivo(index);
+            }
+            return;
+        }
+
+        const action = btn.getAttribute('data-action');
+        const id = btn.getAttribute('data-id');
+
+        switch (action) {
+            case 'visualizar-documento':
+                visualizarDocumento(btn.getAttribute('data-base64'));
+                break;
+            case 'alterar-status':
+                alterarStatus(id, btn.getAttribute('data-status'));
+                break;
+            case 'editar-checklist':
+                editarChecklist(id);
                 break;
         }
     });

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,9 +8,13 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body { 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
             background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
             min-height: 100vh;
@@ -18,33 +23,33 @@
             justify-content: center;
             padding: 20px;
         }
-        
-        .apresentacao-container { 
+
+        .apresentacao-container {
             max-width: 450px;
             width: 100%;
-            background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.9) 100%);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%);
             border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
             padding: 3rem 2.5rem;
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.8);
+            border: 1px solid rgba(255, 255, 255, 0.8);
         }
-        
-        .logo { 
+
+        .logo {
             text-align: center;
             margin-bottom: 2rem;
         }
-        
-        .logo i { 
+
+        .logo i {
             font-size: 4rem;
             background: linear-gradient(135deg, #6B238E, #9B59B6);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            filter: drop-shadow(0 2px 8px rgba(107,35,142,0.2));
+            filter: drop-shadow(0 2px 8px rgba(107, 35, 142, 0.2));
         }
-        
-        .logo h1 { 
+
+        .logo h1 {
             font-size: 2.2rem;
             background: linear-gradient(135deg, #6B238E, #9B59B6);
             -webkit-background-clip: text;
@@ -54,33 +59,33 @@
             font-weight: 700;
             letter-spacing: -0.5px;
         }
-        
-        .apresentacao-container h2 { 
+
+        .apresentacao-container h2 {
             color: #2C3E50;
             margin-bottom: 12px;
             text-align: center;
             font-size: 1.8rem;
             font-weight: 600;
         }
-        
-        .apresentacao-container p { 
+
+        .apresentacao-container p {
             color: #60738A;
             text-align: center;
             margin-bottom: 2rem;
             line-height: 1.6;
             font-size: 1rem;
         }
-        
-        .tab-btns { 
+
+        .tab-btns {
             display: flex;
             gap: 12px;
             margin-bottom: 2rem;
-            background: rgba(225,232,237,0.5);
+            background: rgba(225, 232, 237, 0.5);
             padding: 6px;
             border-radius: 12px;
         }
-        
-        .tab-btn { 
+
+        .tab-btn {
             flex: 1;
             background: transparent;
             border: none;
@@ -92,44 +97,51 @@
             transition: all 0.3s ease;
             font-size: 1rem;
         }
-        
+
         .tab-btn:hover {
             color: #6B238E;
         }
-        
-        .tab-btn.active { 
+
+        .tab-btn.active {
             background: linear-gradient(135deg, #6B238E, #9B59B6);
             color: #fff;
-            box-shadow: 0 4px 12px rgba(107,35,142,0.3);
+            box-shadow: 0 4px 12px rgba(107, 35, 142, 0.3);
         }
-        
-        .form { 
+
+        .form {
             display: none;
         }
-        
-        .form.active { 
+
+        .form.active {
             display: block;
             animation: fadeIn 0.4s ease;
         }
-        
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        
-        .form-group { 
+
+        .form-group {
             margin-bottom: 1.5rem;
         }
-        
-        .form-group label { 
+
+        .form-group label {
             display: block;
             margin-bottom: 8px;
             color: #2C3E50;
             font-weight: 600;
             font-size: 0.95rem;
         }
-        
-        .form-group input { 
+
+        .form-group input {
             width: 100%;
             padding: 13px 16px;
             border: 2px solid #E1E8ED;
@@ -138,19 +150,19 @@
             transition: all 0.3s ease;
             background: white;
         }
-        
+
         .form-group input:focus {
             outline: none;
             border-color: #6B238E;
-            box-shadow: 0 0 0 4px rgba(107,35,142,0.1);
+            box-shadow: 0 0 0 4px rgba(107, 35, 142, 0.1);
         }
-        
-        .form-actions { 
+
+        .form-actions {
             text-align: center;
             margin-top: 2rem;
         }
-        
-        .form-actions button { 
+
+        .form-actions button {
             background: linear-gradient(135deg, #6B238E, #9B59B6);
             color: #fff;
             border: none;
@@ -161,11 +173,11 @@
             font-weight: 600;
             width: 100%;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(107,35,142,0.3);
+            box-shadow: 0 4px 12px rgba(107, 35, 142, 0.3);
             position: relative;
             overflow: hidden;
         }
-        
+
         .form-actions button::before {
             content: '';
             position: absolute;
@@ -173,163 +185,163 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
             transition: left 0.5s;
         }
-        
+
         .form-actions button:hover::before {
             left: 100%;
         }
-        
-        .form-actions button:hover { 
+
+        .form-actions button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(107,35,142,0.4);
+            box-shadow: 0 6px 20px rgba(107, 35, 142, 0.4);
         }
-        
+
         .form-actions button:active {
             transform: translateY(0);
         }
-        
-        .msg { 
+
+        .msg {
             color: #E74C3C;
             text-align: center;
             margin-top: 1rem;
             font-weight: 500;
             padding: 12px;
             border-radius: 8px;
-            background: rgba(231,76,60,0.05);
+            background: rgba(231, 76, 60, 0.05);
             display: none;
         }
-        
+
         .msg:not(:empty) {
             display: block;
         }
-        
+
         .msg.success {
             color: #27AE60;
-            background: rgba(39,174,96,0.05);
+            background: rgba(39, 174, 96, 0.05);
         }
-        
+
         /* Responsividade Mobile */
         @media (max-width: 768px) {
             body {
                 padding: 15px;
             }
-            
+
             .apresentacao-container {
                 padding: 2rem 1.5rem;
             }
-            
+
             .logo i {
                 font-size: 3.5rem;
             }
-            
+
             .logo h1 {
                 font-size: 1.9rem;
             }
-            
+
             .apresentacao-container h2 {
                 font-size: 1.5rem;
             }
-            
+
             .apresentacao-container p {
                 font-size: 0.95rem;
             }
-            
+
             .tab-btn {
                 padding: 10px 20px;
                 font-size: 0.95rem;
             }
-            
+
             .form-group input {
                 padding: 12px 14px;
                 font-size: 0.95rem;
             }
-            
+
             .form-actions button {
                 padding: 13px 35px;
                 font-size: 1rem;
             }
         }
-        
+
         @media (max-width: 480px) {
             body {
                 padding: 10px;
             }
-            
+
             .apresentacao-container {
                 padding: 1.5rem 1.2rem;
                 border-radius: 15px;
             }
-            
+
             .logo i {
                 font-size: 3rem;
             }
-            
+
             .logo h1 {
                 font-size: 1.6rem;
             }
-            
+
             .apresentacao-container h2 {
                 font-size: 1.3rem;
             }
-            
+
             .apresentacao-container p {
                 font-size: 0.9rem;
                 margin-bottom: 1.5rem;
             }
-            
+
             .tab-btns {
                 gap: 8px;
                 padding: 5px;
             }
-            
+
             .tab-btn {
                 padding: 10px 16px;
                 font-size: 0.9rem;
             }
-            
+
             .form-group {
                 margin-bottom: 1.2rem;
             }
-            
+
             .form-group label {
                 font-size: 0.9rem;
                 margin-bottom: 6px;
             }
-            
+
             .form-group input {
                 padding: 11px 13px;
                 font-size: 0.9rem;
             }
-            
+
             .form-actions {
                 margin-top: 1.5rem;
             }
-            
+
             .form-actions button {
                 padding: 12px 30px;
                 font-size: 0.95rem;
             }
         }
-        
+
         @media (max-width: 360px) {
             .apresentacao-container {
                 padding: 1.2rem 1rem;
             }
-            
+
             .logo i {
                 font-size: 2.5rem;
             }
-            
+
             .logo h1 {
                 font-size: 1.4rem;
             }
-            
+
             .apresentacao-container h2 {
                 font-size: 1.2rem;
             }
-            
+
             .tab-btn {
                 padding: 9px 12px;
                 font-size: 0.85rem;
@@ -337,6 +349,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="apresentacao-container">
         <div class="logo">
@@ -344,7 +357,8 @@
             <h1>Açaí Seguro</h1>
         </div>
         <h2>Seja Bem-vindo!</h2>
-        <p>Gestão sanitária e certificação para batedores de açaí. Faça login ou cadastre-se para acessar as funcionalidades.</p>
+        <p>Gestão sanitária e certificação para batedores de açaí. Faça login ou cadastre-se para acessar as
+            funcionalidades.</p>
         <div class="tab-btns">
             <button class="tab-btn active" id="btnLogin">Login</button>
             <button class="tab-btn" id="btnCadastro">Cadastro</button>
@@ -352,7 +366,8 @@
         <form id="formLogin" class="form active">
             <div class="form-group">
                 <label for="loginTipo">Tipo de Acesso</label>
-                <select id="loginTipo" style="width: 100%; padding: 13px 16px; border: 2px solid #E1E8ED; border-radius: 10px; font-size: 1rem; background: white;">
+                <select id="loginTipo"
+                    style="width: 100%; padding: 13px 16px; border: 2px solid #E1E8ED; border-radius: 10px; font-size: 1rem; background: white;">
                     <option value="batedor">Batedor de Açaí</option>
                     <option value="gestor">Gestor / Autoridade Sanitária</option>
                 </select>
@@ -397,7 +412,7 @@
         const btnCadastro = document.getElementById('btnCadastro');
         const formLogin = document.getElementById('formLogin');
         const formCadastro = document.getElementById('formCadastro');
-        
+
         btnLogin.onclick = () => {
             btnLogin.classList.add('active');
             btnCadastro.classList.remove('active');
@@ -410,8 +425,11 @@
             formCadastro.classList.add('active');
             formLogin.classList.remove('active');
         };
-        
-        const API_BASE = 'http://localhost:3000/api';
+
+        const hostname = window.location.hostname;
+        const API_BASE = (hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '')
+            ? 'http://localhost:3000/api'
+            : '/api';
 
         function setMsg(el, texto, tipo) {
             el.textContent = texto;
@@ -419,37 +437,37 @@
         }
 
         // LOGIN
-        formLogin.onsubmit = async function(e) {
+        formLogin.onsubmit = async function (e) {
             e.preventDefault();
             const tipoAcesso = document.getElementById('loginTipo').value;
             const email = document.getElementById('loginEmail').value.trim();
             const senha = document.getElementById('loginSenha').value;
             const msgEl = document.getElementById('loginMsg');
-            
-            if (!email || !senha) { 
-                setMsg(msgEl, 'Preencha todos os campos.', 'erro'); 
-                return; 
+
+            if (!email || !senha) {
+                setMsg(msgEl, 'Preencha todos os campos.', 'erro');
+                return;
             }
-            
+
             msgEl.textContent = 'Aguarde...';
-            
+
             try {
                 const resp = await fetch(API_BASE + '/usuario/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, senha })
                 });
-                
+
                 const data = await resp.json();
-                
+
                 if (resp.ok && data.success) {
                     const userRole = data.data.role || 'batedor';
-                    
+
                     if (tipoAcesso === 'gestor' && userRole !== 'gestor') {
                         setMsg(msgEl, 'Este usuário não possui permissão de gestor.', 'erro');
                         return;
                     }
-                    
+
                     if (tipoAcesso === 'batedor' && userRole === 'gestor') {
                         setMsg(msgEl, 'Use o acesso de Gestor para esta conta.', 'erro');
                         return;
@@ -457,14 +475,14 @@
 
                     // Salvar Token e dados
                     auth.setToken(data.token);
-                    
+
                     if (tipoAcesso === 'gestor') {
                         auth.setGestor(data.data);
                         setMsg(msgEl, 'Login de gestor realizado! Redirecionando...', 'ok');
                         setTimeout(() => { window.location.href = 'gestor.html'; }, 1000);
                     } else {
                         auth.setUsuario(data.data);
-                        
+
                         // Tentar recuperar cadastro do batedor vinculado
                         try {
                             const respCad = await fetch(API_BASE + '/meu-cadastro/' + data.data.id, {
@@ -490,29 +508,29 @@
         };
 
         // CADASTRO
-        formCadastro.onsubmit = async function(e) {
+        formCadastro.onsubmit = async function (e) {
             e.preventDefault();
             const email = document.getElementById('cadastroEmail').value.trim();
             const senha = document.getElementById('cadastroSenha').value;
             const nome = document.getElementById('cadastroNome').value.trim();
             const msgEl = document.getElementById('cadastroMsg');
-            
-            if (!email || !senha || !nome) { 
-                setMsg(msgEl, 'Preencha todos os campos.', 'erro'); 
-                return; 
+
+            if (!email || !senha || !nome) {
+                setMsg(msgEl, 'Preencha todos os campos.', 'erro');
+                return;
             }
-            
+
             msgEl.textContent = 'Aguarde...';
-            
+
             try {
                 const resp = await fetch(API_BASE + '/usuario/cadastro', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ nome, email, senha })
                 });
-                
+
                 const data = await resp.json();
-                
+
                 if (resp.ok && data.success) {
                     setMsg(msgEl, 'Cadastro realizado com sucesso! Faça o login.', 'ok');
                     formCadastro.reset();
@@ -529,4 +547,5 @@
         };
     </script>
 </body>
+
 </html>

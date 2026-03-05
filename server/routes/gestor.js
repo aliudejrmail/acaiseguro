@@ -213,6 +213,16 @@ router.post('/analise', async (req, res) => {
         // Atualizar status do batedor
         let novoStatus = 'em_analise';
         if (resultado === 'aprovado') {
+            // Verificar requisitos mínimos para aprovação
+            const checkBatedor = await db.query('SELECT alvara, alvara_foto FROM batedores WHERE id = $1', [batedorId]);
+            const b = checkBatedor.rows[0];
+
+            if (!b.alvara || !b.alvara_foto) {
+                await db.query('ROLLBACK');
+                return res.status(400).json({
+                    error: 'Não é possível aprovar o estabelecimento pois o Número do Alvará ou a Foto do Alvará não foram registrados.'
+                });
+            }
             novoStatus = 'aprovado';
         } else if (resultado === 'reprovado') {
             novoStatus = 'reprovado';
@@ -399,8 +409,19 @@ router.put('/batedor/:id/status', async (req, res) => {
         const { id } = req.params;
         const { status, motivoReprovacao } = req.body;
 
-        if (!['pendente', 'aprovado', 'reprovado', 'em_analise'].includes(status)) {
-            return res.status(400).json({ error: 'Status inválido' });
+        if (status === 'aprovado') {
+            // Verificar requisitos mínimos para aprovação
+            const batedorCheck = await db.query('SELECT alvara, alvara_foto FROM batedores WHERE id = $1', [id]);
+            if (batedorCheck.rows.length === 0) {
+                return res.status(404).json({ error: 'Batedor não encontrado' });
+            }
+
+            const b = batedorCheck.rows[0];
+            if (!b.alvara || !b.alvara_foto) {
+                return res.status(400).json({
+                    error: 'Não é possível aprovar o estabelecimento pois o Número do Alvará ou a Foto do Alvará não foram registrados.'
+                });
+            }
         }
 
         await db.query('BEGIN');

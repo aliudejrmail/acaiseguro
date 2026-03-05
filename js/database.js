@@ -2,7 +2,11 @@ import { auth } from './modules/auth.js';
 
 class Database {
     constructor() {
-        this.apiUrl = 'http://localhost:3000/api';
+        // Usa URL relativa para funcionar tanto local quanto em produção
+        const hostname = window.location.hostname;
+        this.apiUrl = (hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '')
+            ? 'http://localhost:3000/api'
+            : '/api';
         this.storage = window.localStorage;
     }
 
