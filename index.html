@@ -327,96 +327,100 @@
         </div>
 
         <!-- Módulo 2: Calculadora de Cloração -->
-        <div id="calculadora" class="page" id="calculadora-page">
-            <div class="calc-header">
-                <button class="btn-back" onclick="showPage('home')">
-                    <i class="fas fa-arrow-left"></i> Voltar
-                </button>
-                <button class="btn-dark-mode" id="btnDarkMode" onclick="toggleDarkMode()" title="Modo escuro">
-                    <i class="fas fa-moon" id="darkModeIcon"></i>
-                </button>
-            </div>
-
-            <h2><i class="fas fa-flask"></i> Calculadora de Higienização</h2>
-            <p class="info-text">
-                <i class="fas fa-info-circle"></i>
-                A cloração adequada é essencial para eliminar microrganismos e garantir a segurança do açaí.
-                Faixa segura de hipoclorito: <strong>2% a 12%</strong>.
-            </p>
-
-            <!-- Alerta de concentração -->
-            <div id="alertaConcentracao" class="alerta-concentracao" style="display:none;">
-                <i class="fas fa-exclamation-triangle"></i>
-                <span id="alertaConcentracaoMsg"></span>
-            </div>
-
-            <form id="formCalculadora" class="form-calculadora">
-                <div class="form-group">
-                    <label for="quantidadeAgua">Quantidade de água no tanque (litros) *</label>
-                    <input type="number" id="quantidadeAgua" step="0.1" min="0.1" required placeholder="Ex: 10">
-                </div>
-
-                <div class="form-group">
-                    <label for="concentracaoCloro">Concentração de cloro ativo do produto (%) *</label>
-                    <select id="concentracaoCloro" required onchange="verificarConcentracao(this.value)">
-                        <option value="">Selecione...</option>
-                        <option value="2.0">2,0% — Hipoclorito diluído</option>
-                        <option value="2.5">2,5% — Água sanitária padrão</option>
-                        <option value="10">10% — Hipoclorito concentrado</option>
-                        <option value="12">12% — Hipoclorito superior</option>
-                    </select>
-                </div>
-
-                <button type="submit" class="btn-primary btn-large">
-                    <i class="fas fa-calculator"></i> Calcular Dosagem
-                </button>
-            </form>
-
-            <!-- Resultado -->
-            <div id="resultadoCalculadora" class="resultado-box" style="display: none;">
-                <div class="resultado-header">
-                    <h3><i class="fas fa-check-circle"></i> Resultado do Cálculo</h3>
-                    <div class="resultado-acoes">
-                        <button class="btn-compartilhar" onclick="compartilharWhatsApp()"
-                            title="Compartilhar via WhatsApp">
-                            <i class="fab fa-whatsapp"></i>
-                        </button>
-                        <button class="btn-compartilhar btn-email" onclick="compartilharEmail()"
-                            title="Compartilhar por E-mail">
-                            <i class="fas fa-envelope"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="resultado-destaque">
-                    <p><strong>Hipoclorito necessário:</strong></p>
-                    <p class="valor-grande" id="quantidadeCloro"></p>
-                </div>
-                <div class="resultado-meta">
-                    <span id="resultadoAgua"></span>
-                    <span id="resultadoConc"></span>
-                </div>
-                <div class="instrucoes">
-                    <h4><i class="fas fa-clock"></i> Tempo de Imersão: <span id="tempoImersao"></span></h4>
-                    <h4><i class="fas fa-list-ol"></i> Instruções</h4>
-                    <ol>
-                        <li>Adicione a quantidade calculada de hipoclorito na água</li>
-                        <li>Mergulhe os frutos do açaí completamente</li>
-                        <li>Aguarde o tempo de imersão indicado</li>
-                        <li>Enxágue bem com água potável</li>
-                    </ol>
-                </div>
-            </div>
-
-            <!-- Histórico de Cálculos -->
-            <div class="historico-calc-section">
-                <div class="historico-calc-header">
-                    <h3><i class="fas fa-history"></i> Histórico de Dosagens</h3>
-                    <button class="btn-limpar-hist" onclick="limparHistoricoCalc()" title="Limpar histórico">
-                        <i class="fas fa-trash"></i>
+        <div id="calculadora" class="page calc-page">
+            <div class="calc-container">
+                <div class="calc-header">
+                    <button class="btn-back" onclick="showPage('home')">
+                        <i class="fas fa-arrow-left"></i> Voltar
+                    </button>
+                    <button class="btn-dark-mode" id="btnDarkMode" onclick="toggleDarkMode()" title="Modo escuro">
+                        <i class="fas fa-moon" id="darkModeIcon"></i>
                     </button>
                 </div>
-                <div id="historicoCalc" class="historico-calc-lista">
-                    <p class="vazio-hist"><i class="fas fa-inbox"></i> Nenhum cálculo salvo ainda.</p>
+
+                <div class="calc-title-section">
+                    <h2><i class="fas fa-flask"></i> Calculadora de Higienização</h2>
+                    <p class="info-text">
+                        <i class="fas fa-info-circle"></i>
+                        A cloração adequada é essencial para eliminar microrganismos e garantir a segurança do açaí.
+                        Faixa segura de hipoclorito: <strong>2% a 12%</strong>.
+                    </p>
+                </div>
+
+                <!-- Alerta de concentração -->
+                <div id="alertaConcentracao" class="alerta-concentracao" style="display:none;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span id="alertaConcentracaoMsg"></span>
+                </div>
+
+                <form id="formCalculadora" class="form-calculadora">
+                    <div class="calc-form-grid">
+                        <div class="form-group">
+                            <label for="quantidadeAgua">Quantidade de água no tanque (litros) *</label>
+                            <input type="number" id="quantidadeAgua" step="0.1" min="0.1" required placeholder="Ex: 10">
+                        </div>
+                        <div class="form-group">
+                            <label for="concentracaoCloro">Concentração de cloro ativo (%) *</label>
+                            <select id="concentracaoCloro" required onchange="verificarConcentracao(this.value)">
+                                <option value="">Selecione...</option>
+                                <option value="2.0">2,0% — Hipoclorito diluído</option>
+                                <option value="2.5">2,5% — Água sanitária padrão</option>
+                                <option value="10">10% — Hipoclorito concentrado</option>
+                                <option value="12">12% — Hipoclorito superior</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary btn-calc-submit">
+                        <i class="fas fa-calculator"></i> Calcular Dosagem
+                    </button>
+                </form>
+
+                <!-- Resultado -->
+                <div id="resultadoCalculadora" class="resultado-box" style="display: none;">
+                    <div class="resultado-header">
+                        <h3><i class="fas fa-check-circle"></i> Resultado do Cálculo</h3>
+                        <div class="resultado-acoes">
+                            <button class="btn-compartilhar" onclick="compartilharWhatsApp()"
+                                title="Compartilhar via WhatsApp">
+                                <i class="fab fa-whatsapp"></i>
+                            </button>
+                            <button class="btn-compartilhar btn-email" onclick="compartilharEmail()"
+                                title="Compartilhar por E-mail">
+                                <i class="fas fa-envelope"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="resultado-destaque">
+                        <p class="resultado-label">Hipoclorito necessário</p>
+                        <p class="valor-grande" id="quantidadeCloro"></p>
+                    </div>
+                    <div class="resultado-meta">
+                        <span id="resultadoAgua"></span>
+                        <span id="resultadoConc"></span>
+                    </div>
+                    <div class="instrucoes">
+                        <h4><i class="fas fa-clock"></i> Tempo de Imersão: <span id="tempoImersao"></span></h4>
+                        <h4><i class="fas fa-list-ol"></i> Instruções</h4>
+                        <ol>
+                            <li>Adicione a quantidade calculada de hipoclorito na água</li>
+                            <li>Mergulhe os frutos do açaí completamente</li>
+                            <li>Aguarde o tempo de imersão indicado</li>
+                            <li>Enxágue bem com água potável</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Histórico de Cálculos -->
+                <div class="historico-calc-section">
+                    <div class="historico-calc-header">
+                        <h3><i class="fas fa-history"></i> Histórico de Dosagens</h3>
+                        <button class="btn-limpar-hist" onclick="limparHistoricoCalc()" title="Limpar histórico">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                    <div id="historicoCalc" class="historico-calc-lista">
+                        <p class="vazio-hist"><i class="fas fa-inbox"></i> Nenhum cálculo salvo ainda.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1248,7 +1252,7 @@
     </footer>
 
     <!-- Modal de Cronômetro -->
-    <div id="timerModal" class="modal">
+    <div id="timerModal" class="modal" style="display: none;">
         <div class="modal-content">
             <h3>Cronômetro de Branqueamento</h3>
             <div class="timer-digital" id="timerDigital">10</div>

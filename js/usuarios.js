@@ -20,11 +20,17 @@ window.addEventListener('DOMContentLoaded', () => {
     const gestorNomeEl = document.getElementById('gestorNome');
     if (gestorNomeEl) gestorNomeEl.textContent = usuarioData.nome || '';
     document.getElementById('btnLogout').addEventListener('click', () => {
-        auth.logout();
-        window.location.href = 'apresentacao.html';
+        if (confirm('Deseja realmente sair?')) {
+            auth.logout();
+            window.location.href = 'apresentacao.html';
+        }
     });
 
-    carregarUsuarios();
+    try {
+        carregarUsuarios();
+    } catch (e) {
+        console.error('Erro ao carregar usuários:', e);
+    }
     document.getElementById('filtroUsuarios').addEventListener('input', debounce(aplicarFiltros, 500));
     document.getElementById('filtroRole').addEventListener('change', aplicarFiltros);
     document.getElementById('btnNovoUsuario').addEventListener('click', abrirModalNovoUsuario);
@@ -82,11 +88,11 @@ function renderizarTabelaUsuarios(usuarios) {
 
     tbody.innerHTML = usuarios.map(u => `
         <tr data-id="${u.id}">
-            <td>${u.nome}</td>
-            <td>${u.email}</td>
-            <td>${u.role || 'batedor'}</td>
-            <td>${new Date(u.criado_em).toLocaleString()}</td>
-            <td class="table-actions">
+            <td data-label="Nome">${u.nome}</td>
+            <td data-label="Email">${u.email}</td>
+            <td data-label="Role">${u.role || 'batedor'}</td>
+            <td data-label="Criado em">${new Date(u.criado_em).toLocaleString()}</td>
+            <td data-label="Ações" class="table-actions">
                 <button class="btn-icon btn-editar" data-action="editar" data-id="${u.id}" title="Editar">
                     <i class="fas fa-edit"></i>
                 </button>

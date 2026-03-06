@@ -329,13 +329,74 @@ main {
 }
 
 /* Formulários */
-.form-cadastro,
-.form-calculadora {
+.form-cadastro {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%);
     padding: 2.5rem;
     border-radius: 16px;
     box-shadow: var(--shadow-lg);
     border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.form-calculadora {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e2e8f0;
+    margin-bottom: 1.5rem;
+}
+
+.calc-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+@media (max-width: 560px) {
+    .calc-form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+#calculadora .form-group label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #334155;
+}
+
+#calculadora .form-group input,
+#calculadora .form-group select {
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+#calculadora .form-group input:focus,
+#calculadora .form-group select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(107, 35, 142, 0.12);
+}
+
+.btn-calc-submit {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.btn-calc-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(107, 35, 142, 0.35);
 }
 
 .form-section {
@@ -640,40 +701,52 @@ main {
 
 /* Resultado Calculadora */
 .resultado-box {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%);
-    padding: 2.5rem;
+    background: #ffffff;
+    padding: 2rem;
     border-radius: 16px;
-    box-shadow: var(--shadow-lg);
-    margin-top: 2rem;
-    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    margin-top: 1.5rem;
+    border: 1px solid #e2e8f0;
 }
 
 .resultado-box h3 {
     color: var(--primary-color);
-    margin-bottom: 1.8rem;
+    margin-bottom: 1.5rem;
     font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.resultado-header {
+    margin-bottom: 1.5rem;
 }
 
 .resultado-destaque {
     background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
     color: white;
-    padding: 2.5rem;
+    padding: 2rem;
     border-radius: 14px;
     text-align: center;
     margin-bottom: 1.5rem;
-    box-shadow: var(--shadow);
+    box-shadow: 0 4px 16px rgba(107, 35, 142, 0.25);
+}
+
+.resultado-label {
+    font-size: 0.9rem;
+    opacity: 0.95;
+    margin-bottom: 0.5rem;
 }
 
 .valor-grande {
-    font-size: 2.8rem;
+    font-size: 2.5rem;
     font-weight: 700;
-    margin-top: 1rem;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 0;
+    letter-spacing: -0.02em;
 }
 
 .instrucoes h4 {
     color: var(--dark-text);
-    margin: 1.5rem 0 1rem 0;
+    margin: 1.25rem 0 0.75rem 0;
+    font-size: 1rem;
 }
 
 .instrucoes h4 i {
@@ -683,11 +756,27 @@ main {
 
 .instrucoes ol,
 .instrucoes ul {
-    margin-left: 2rem;
+    margin-left: 1.5rem;
 }
 
 .instrucoes li {
     margin-bottom: 0.5rem;
+    line-height: 1.5;
+}
+
+/* Info-text específico da calculadora */
+#calculadora .info-text {
+    background: #f0fdf4;
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    border-left: 4px solid var(--accent-color);
+    font-size: 0.95rem;
+    color: #166534;
+    line-height: 1.5;
+}
+
+#calculadora .info-text i {
+    color: var(--accent-color);
 }
 
 /* Etapas do Processamento - Estilos Interativos */
@@ -2481,11 +2570,37 @@ footer p {
 
 /* ==================== CALCULADORA MELHORADA ==================== */
 
+.calc-page {
+    background: #f8fafc;
+    min-height: 100vh;
+}
+
+.calc-container {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 1.5rem 1.25rem 2.5rem;
+}
+
 .calc-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.75rem;
+}
+
+.calc-header .btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    border-radius: 12px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+}
+
+.calc-header .btn-back:hover {
+    transform: translateX(-2px);
 }
 
 .btn-dark-mode {
@@ -2497,15 +2612,33 @@ footer p {
     border-radius: 50%;
     cursor: pointer;
     font-size: 1.1rem;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: var(--shadow);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
 
 .btn-dark-mode:hover {
-    transform: rotate(20deg) scale(1.1);
+    transform: rotate(15deg) scale(1.05);
+}
+
+.calc-title-section {
+    margin-bottom: 1.5rem;
+}
+
+.calc-title-section h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.calc-title-section h2 i {
+    color: var(--primary-color);
 }
 
 /* Alertas */
@@ -2609,11 +2742,11 @@ footer p {
 
 .resultado-meta {
     display: flex;
-    gap: 1.5rem;
-    font-size: 0.9rem;
-    color: #60738A;
-    margin: -0.5rem 0 1rem;
-    padding-left: 0.5rem;
+    flex-wrap: wrap;
+    gap: 1rem 1.5rem;
+    font-size: 0.875rem;
+    color: #64748b;
+    margin-bottom: 1rem;
 }
 
 .resultado-meta i {
@@ -2622,61 +2755,66 @@ footer p {
 }
 
 .valor-num {
-    font-size: 3rem;
-    font-weight: 800;
-    letter-spacing: -1px;
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
 }
 
 /* Histórico */
 .historico-calc-section {
-    margin-top: 2.5rem;
-    background: rgba(255, 255, 255, 0.95);
+    margin-top: 1.5rem;
+    background: #ffffff;
     border-radius: 16px;
-    box-shadow: var(--shadow);
-    padding: 1.8rem;
-    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    padding: 1.5rem;
+    border: 1px solid #e2e8f0;
 }
 
 .historico-calc-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.2rem;
+    margin-bottom: 1rem;
     padding-bottom: 1rem;
-    border-bottom: 2px solid var(--border-color);
+    border-bottom: 1px solid #e2e8f0;
 }
 
 .historico-calc-header h3 {
     color: var(--primary-color);
-    font-size: 1.1rem;
+    font-size: 1rem;
+    font-weight: 600;
     margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .btn-limpar-hist {
     background: transparent;
-    color: #E74C3C;
-    border: 1.5px solid #E74C3C;
-    padding: 6px 14px;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+    padding: 0.5rem 1rem;
     border-radius: 8px;
     cursor: pointer;
     font-size: 0.85rem;
     font-weight: 500;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 0.5rem;
 }
 
 .btn-limpar-hist:hover {
-    background: #E74C3C;
+    background: #dc2626;
     color: white;
+    border-color: #dc2626;
 }
 
 .historico-calc-lista {
     display: flex;
     flex-direction: column;
-    gap: 0.8rem;
-    max-height: 300px;
+    gap: 0.75rem;
+    max-height: 280px;
     overflow-y: auto;
     padding-right: 4px;
 }
@@ -2685,52 +2823,61 @@ footer p {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 1.2rem;
-    background: var(--light-bg);
-    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    background: #f8fafc;
+    border-radius: 12px;
     cursor: pointer;
     transition: all 0.2s ease;
     border: 1px solid transparent;
 }
 
 .hist-item:hover {
-    background: linear-gradient(135deg, rgba(107, 35, 142, 0.08), rgba(155, 89, 182, 0.08));
-    border-color: rgba(107, 35, 142, 0.2);
-    transform: translateX(4px);
+    background: rgba(107, 35, 142, 0.06);
+    border-color: rgba(107, 35, 142, 0.15);
 }
 
 .hist-item-info {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 0.25rem;
 }
 
 .hist-resultado {
     font-weight: 700;
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: var(--primary-color);
 }
 
 .hist-detalhe {
-    font-size: 0.82rem;
-    color: #60738A;
+    font-size: 0.8rem;
+    color: #64748b;
 }
 
 .hist-data {
-    font-size: 0.78rem;
-    color: #9FB3C8;
+    font-size: 0.75rem;
+    color: #94a3b8;
     white-space: nowrap;
 }
 
 .vazio-hist {
     text-align: center;
-    color: #9FB3C8;
-    padding: 1.5rem;
+    color: #94a3b8;
+    padding: 2rem 1rem;
     font-size: 0.95rem;
 }
 
+.vazio-hist i {
+    display: block;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    opacity: 0.5;
+}
+
 /* Modo Escuro */
-body.dark-calc #calculadora,
+body.dark-calc .calc-page {
+    background: #0f172a !important;
+}
+
 body.dark-calc #calculadora .form-calculadora,
 body.dark-calc #calculadora .resultado-box,
 body.dark-calc #calculadora .historico-calc-section {
@@ -2764,7 +2911,11 @@ body.dark-calc #calculadora .hist-item:hover {
 
 body.dark-calc #calculadora .info-text {
     background: rgba(255, 255, 255, 0.05) !important;
-    color: #b0b0b0;
+    color: #b0b0b0 !important;
+}
+
+body.dark-calc .calc-title-section h2 {
+    color: #d0b3e8 !important;
 }
 
 /* Checklist Grid no Gestor */
@@ -3067,5 +3218,185 @@ body.dark-calc #calculadora .info-text {
     .score-progress-container {
         margin: 10px 0;
         width: 100%;
+    }
+}
+
+/* ==========================================================================
+   GLOBAL RESPONSIVENESS (Açaí Seguro)
+   ========================================================================== */
+
+@media (max-width: 768px) {
+
+    /* Header & Navigation */
+    .header-content {
+        flex-direction: column !important;
+        padding: 1rem !important;
+        gap: 1rem !important;
+        text-align: center !important;
+    }
+
+    .logo {
+        justify-content: center !important;
+        margin-bottom: 0.5rem;
+    }
+
+    .logo i {
+        font-size: 1.8rem !important;
+    }
+
+    .logo h1 {
+        font-size: 1.4rem !important;
+    }
+
+    nav {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        gap: 8px !important;
+        width: 100% !important;
+    }
+
+    .btn-perfil {
+        padding: 8px 16px !important;
+        font-size: 0.85rem !important;
+        flex: 1 1 auto !important;
+        min-width: 120px !important;
+        justify-content: center !important;
+    }
+
+    /* Layout Containers */
+    .container {
+        padding: 0 15px;
+    }
+
+    main {
+        padding: 1rem 0;
+    }
+
+    /* Grids */
+    .modulos-grid,
+    .dashboard-cards {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .modulo-card {
+        padding: 1.5rem;
+    }
+
+    /* Forms */
+    .form-cadastro,
+    .form-calculadora,
+    .resultado-box {
+        padding: 1.5rem;
+    }
+
+    .calc-container {
+        padding: 1rem 1rem 2rem;
+    }
+
+    .form-section h3 {
+        font-size: 1.3rem;
+    }
+
+    .step-buttons {
+        flex-direction: column;
+    }
+
+    .step-buttons button {
+        width: 100%;
+    }
+
+    /* Responsive Tables (Card Pattern) */
+    .tabela-section {
+        border-radius: 12px;
+    }
+
+    .tabela-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .actions-row {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .actions-row button,
+    .actions-row .filtro-group {
+        width: 100%;
+    }
+
+    .tabela-batedores thead {
+        display: none;
+        /* Hide headers on mobile */
+    }
+
+    .tabela-batedores table,
+    .tabela-batedores tbody,
+    .tabela-batedores tr,
+    .tabela-batedores td {
+        display: block;
+        width: 100%;
+    }
+
+    .tabela-batedores tr {
+        margin-bottom: 1rem;
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        background: white;
+        padding: 0.5rem;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .tabela-batedores td {
+        text-align: right;
+        padding: 0.75rem 0.5rem;
+        position: relative;
+        border-bottom: 1px dashed var(--border-color);
+        min-height: 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .tabela-batedores td:last-child {
+        border-bottom: none;
+    }
+
+    .tabela-batedores td[data-label]::before {
+        content: attr(data-label);
+        float: left;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.7rem;
+        color: var(--secondary-color);
+        margin-right: 10px;
+    }
+
+    /* Dashboard & Metrics */
+    .dashboard-card .value {
+        font-size: 2rem;
+    }
+
+    /* Utility helpers */
+    .mobile-hide {
+        display: none !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo h1 {
+        font-size: 1.2rem;
+    }
+
+    .btn-perfil {
+        width: 100%;
+    }
+
+    .perfil-header h2 {
+        font-size: 1.4rem;
     }
 }

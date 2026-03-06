@@ -63,6 +63,12 @@ document.addEventListener('DOMContentLoaded', function () {
     gestorLogado = gestorData;
     document.getElementById('gestorNome').textContent = gestorLogado.nome;
 
+    // IMPORTANTE: Registrar botão de logout ANTES de qualquer chamada de API
+    // para que funcione mesmo se as APIs falharem (ex: 401)
+    document.querySelectorAll('[aria-label="Sair do sistema"]').forEach(btn => {
+        btn.addEventListener('click', logout);
+    });
+
     // Carregar dashboard
     carregarDashboard();
     carregarBatedores();
@@ -190,18 +196,18 @@ function renderizarTabelaBatedores(batedores) {
 
         return `
             <tr data-id="${b.id}">
-                <td><strong>${b.nome_fantasia}</strong></td>
-                <td>${b.nome}</td>
-                <td>${b.cpf}</td>
-                <td><span class="status-badge ${statusClass}">${statusText}</span></td>
-                <td>
+                <td data-label="Estabelecimento"><strong>${b.nome_fantasia}</strong></td>
+                <td data-label="Responsável">${b.nome}</td>
+                <td data-label="CPF">${b.cpf}</td>
+                <td data-label="Status"><span class="status-badge ${statusClass}">${statusText}</span></td>
+                <td data-label="Conformidade">
                     ${b.total_checklists > 0 ?
                 `<strong>${conformidade}%</strong>` :
                 '<span style="color: #999;">Sem dados</span>'}
                 </td>
-                <td>${b.total_checklists || 0}</td>
-                <td style="font-size: 1.5rem; text-align: center;">${seloIcon}</td>
-                <td>
+                <td data-label="Checklists">${b.total_checklists || 0}</td>
+                <td data-label="Selo" style="font-size: 1.5rem; text-align: center;">${seloIcon}</td>
+                <td data-label="Ações">
                     <div class="btn-acoes">
                         <button class="btn-icon btn-visualizar" data-action="detalhes" data-id="${b.id}" title="Ver Detalhes">
                             <i class="fas fa-eye"></i>

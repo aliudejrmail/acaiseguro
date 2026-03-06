@@ -4,206 +4,262 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#7828c8">
     <title>Administração de Usuários - Açaí Seguro</title>
-    <link rel="stylesheet" href="css/styles.css?v=23">
-    <link rel="stylesheet" href="css/style.css?v=23">
+    <link rel="stylesheet" href="css/styles.css?v=24">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ajustes adicionais específicos */
-        .table-actions button {
-            margin-right: 4px;
+        /* Layout profissional - Açaí Seguro */
+        :root {
+            --cor-primaria: #7828c8;
+            --cor-primaria-hover: #9333ea;
+            --cor-primaria-light: rgba(120, 40, 200, 0.08);
+            --cor-primaria-soft: rgba(120, 40, 200, 0.06);
+            --cor-fundo: #f8fafc;
+            --cor-fundo-card: #ffffff;
+            --cor-borda: #e2e8f0;
+            --cor-borda-light: #f1f5f9;
+            --cor-texto-principal: #1e293b;
+            --cor-texto-secundario: #64748b;
+            --cor-texto-terciario: #94a3b8;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --font-size-sm: 0.875rem;
+            --font-size-md: 1rem;
+            --font-size-lg: 1.125rem;
+            --font-size-xl: 1.5rem;
+            --font-size-2xl: 1.75rem;
+            --border-radius: 12px;
+            --border-radius-lg: 16px;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.1);
+            --shadow-header: 0 4px 20px rgba(120, 40, 200, 0.25);
+            --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
-        /* utilitários compartilhados */
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border: 0;
+        body {
+            background: var(--cor-fundo);
+            font-family: var(--font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
         }
-
-        /* Tabela profissional (reuso dos estilos de gestor) */
+        header {
+            background: linear-gradient(135deg, var(--cor-primaria) 0%, var(--cor-primaria-hover) 100%);
+            padding: 1rem 2rem;
+            box-shadow: var(--shadow-header);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(8px);
+        }
+        header .logo, header .logo i, header .logo h1 {
+            color: white !important;
+        }
+        header .logo i {
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+        }
+        .btn-perfil {
+            transition: all var(--transition);
+        }
+        .btn-perfil:hover {
+            background: rgba(255, 255, 255, 0.25) !important;
+        }
+        .gestor-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--spacing-xl);
+        }
+        .btn-back {
+            padding: 0.75rem 1.25rem;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            font-size: var(--font-size-sm);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all var(--transition);
+        }
+        .btn-back:hover {
+            transform: translateX(-2px);
+        }
+        .perfil-header {
+            margin-bottom: 1.75rem;
+        }
+        .perfil-header h2 {
+            font-size: var(--font-size-2xl);
+            font-weight: 700;
+            color: var(--cor-texto-principal);
+            letter-spacing: -0.02em;
+        }
         .tabela-section {
-            background: #fff;
-            border-radius: 8px;
+            background: var(--cor-fundo-card);
+            border-radius: var(--border-radius-lg);
             overflow: hidden;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--cor-borda-light);
         }
-
         .tabela-header {
-            padding: 1rem 1.5rem;
-            background: var(--primary-color);
-            color: white;
+            background: linear-gradient(135deg, var(--cor-primaria), var(--cor-primaria-hover));
+            padding: 1.25rem 1.5rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 0.5rem;
+            gap: 1rem;
         }
-
         .tabela-header h3 {
-            font-size: 1.25rem;
+            color: white !important;
+            font-size: var(--font-size-lg);
             font-weight: 600;
             margin: 0;
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
-
-        .tabela-batedores {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
+        .tabela-header h3 i {
+            opacity: 0.95;
         }
-
-        .tabela-batedores table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: max-content;
-        }
-
-        .tabela-batedores thead {
-            background: #f7fafc;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-
-        .tabela-batedores th {
-            padding: 1rem 1.5rem;
-            text-align: left;
-            font-weight: 600;
-            font-size: 0.75rem;
-            color: #6d6d6d;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            white-space: nowrap;
-        }
-
-        .tabela-batedores td {
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid #e1e8ed;
-            color: var(--dark-text);
-            vertical-align: middle;
-        }
-
-        .tabela-batedores td[data-label] {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .tabela-batedores td[data-label]::before {
-            content: attr(data-label);
-            font-weight: 600;
-            color: #6d6d6d;
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            margin-right: 1rem;
-        }
-
-        .tabela-batedores tbody tr {
-            transition: background 0.2s;
-            cursor: pointer;
-        }
-
-        .tabela-batedores tbody tr:hover {
-            background: rgba(107, 35, 142, 0.05);
-        }
-
-        .tabela-batedores tbody tr:last-child td {
-            border-bottom: none;
-        }
-
         .actions-row {
             display: flex;
             align-items: center;
             gap: 1rem;
             flex-wrap: wrap;
         }
-
-        /* ensure header-content container spacing matches global */
-        header .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
+        .actions-row .btn-primario {
+            padding: 0.625rem 1.25rem;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            font-size: var(--font-size-sm);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all var(--transition);
+            box-shadow: 0 2px 8px rgba(120, 40, 200, 0.3);
         }
-
+        .actions-row .btn-primario:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(120, 40, 200, 0.4);
+        }
         .filtro-group {
             display: flex;
             flex-direction: column;
-            gap: 0.25rem;
+            gap: 0.5rem;
         }
-
-        .filtro-group label {
+        .tabela-header .filtro-group label {
             font-size: 0.75rem;
-            color: #6d6d6d;
             font-weight: 600;
+            color: rgba(255, 255, 255, 0.95);
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
         }
-
-        .filtro-group input,
-        .filtro-group select {
-            padding: 0.5rem;
-            border: 1px solid #e1e8ed;
-            border-radius: 6px;
-            font-size: 1rem;
-            transition: all 0.2s;
-            background: #fff;
-            width: 100%;
+        .tabela-header .filtro-group input,
+        .tabela-header .filtro-group select {
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            border: none;
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--cor-texto-principal);
+            font-size: var(--font-size-sm);
+            min-width: 160px;
+            transition: all var(--transition);
         }
-
-        .filtro-group input:focus,
-        .filtro-group select:focus {
+        .tabela-header .filtro-group input::placeholder {
+            color: var(--cor-texto-terciario);
+        }
+        .tabela-header .filtro-group input:focus,
+        .tabela-header .filtro-group select:focus {
             outline: none;
-            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
         }
-
-        /* responsividade mobile */
-        @media (max-width: 600px) {
-            .tabela-header {
-                flex-direction: column;
-                align-items: flex-start;
-                padding: 1rem;
-            }
-
-            .tabela-batedores thead {
-                display: none;
-            }
-
-            .tabela-batedores tbody tr {
-                display: block;
-                margin-bottom: 1rem;
-                border: 1px solid #e1e8ed;
-                border-radius: 8px;
-                padding: 1rem;
-            }
-
-            .tabela-batedores td {
-                display: flex;
-                justify-content: space-between;
-                padding: 0.5rem 0;
-                border: none;
-                border-bottom: 1px dashed #e1e8ed;
-                font-size: 0.875rem;
-            }
+        .tabela-batedores {
+            overflow-x: auto;
+        }
+        .tabela-batedores table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .tabela-batedores thead {
+            background: #f8fafc;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+        .tabela-batedores th {
+            padding: 1rem 1.25rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.75rem;
+            color: var(--cor-texto-secundario);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            border-bottom: 2px solid var(--cor-borda);
+        }
+        .tabela-batedores td {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--cor-borda-light);
+            color: var(--cor-texto-principal);
+            font-size: var(--font-size-sm);
+            transition: background var(--transition);
+        }
+        .tabela-batedores tbody tr:hover {
+            background: var(--cor-primaria-soft);
+        }
+        .tabela-batedores tbody tr:last-child td {
+            border-bottom: none;
+        }
+        .table-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .table-actions button {
+            margin-right: 0;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: all var(--transition);
+        }
+        .modal-header {
+            background: linear-gradient(135deg, var(--cor-primaria), var(--cor-primaria-hover));
+            color: white;
+            padding: 1.25rem 1.5rem;
+        }
+        .modal {
+            border-radius: var(--border-radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+        .modal-body {
+            padding: 1.5rem;
+        }
+        .form-group input,
+        .form-group select {
+            border-radius: var(--border-radius);
+            border: 1px solid var(--cor-borda);
+            padding: 0.75rem 1rem;
+            transition: all var(--transition);
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--cor-primaria);
+            box-shadow: 0 0 0 3px var(--cor-primaria-light);
+        }
+        .form-actions .btn-primary {
+            background: linear-gradient(135deg, var(--cor-primaria), var(--cor-primaria-hover));
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            transition: all var(--transition);
+        }
+        .form-actions .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(120, 40, 200, 0.35);
         }
     </style>
 </head>
 
 <body>
-    <a href="#main-content" class="skip-link">Pular para conteúdo principal</a>
     <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
 
-    <!-- Header (copied from index for consistency) -->
+    <!-- Header (padrão gestor.html) -->
     <header>
         <div class="container">
             <div class="header-content">
@@ -211,22 +267,23 @@
                     <i class="fas fa-leaf" aria-hidden="true"></i>
                     <h1>Gestão de Usuários</h1>
                 </div>
-                <nav>
+                <nav aria-label="Navegação principal">
                     <button class="btn-perfil" aria-label="Nome do gestor">
                         <span id="gestorNome">&nbsp;</span>
                     </button>
                     <a href="gestor.html" class="btn-perfil" aria-label="Voltar ao painel">
                         <i class="fas fa-arrow-left" aria-hidden="true"></i> Painel
                     </a>
-                    <button id="btnLogout" class="btn-perfil" aria-label="Sair do sistema">
-                        <i class="fas fa-sign-out-alt"></i> Sair
+                    <button id="btnLogout" class="btn-perfil" aria-label="Sair do sistema"
+                        onclick="if(confirm('Deseja realmente sair?')){localStorage.clear();window.location.href='apresentacao.html'}">
+                        <i class="fas fa-sign-out-alt" aria-hidden="true"></i> Sair
                     </button>
                 </nav>
             </div>
         </div>
     </header>
 
-    <main class="gestor-container container" id="main-content">
+    <main class="gestor-container" id="main-content">
         <!-- página interna com barra de título similar às páginas de batedores -->
         <button class="btn-back" onclick="window.location='gestor.html'">
             <i class="fas fa-arrow-left"></i> Voltar ao Painel
