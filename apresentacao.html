@@ -365,20 +365,12 @@
         </div>
         <form id="formLogin" class="form active">
             <div class="form-group">
-                <label for="loginTipo">Tipo de Acesso</label>
-                <select id="loginTipo"
-                    style="width: 100%; padding: 13px 16px; border: 2px solid #E1E8ED; border-radius: 10px; font-size: 1rem; background: white;">
-                    <option value="batedor">Batedor de Açaí</option>
-                    <option value="gestor">Gestor / Autoridade Sanitária</option>
-                </select>
-            </div>
-            <div class="form-group">
                 <label for="loginEmail">E-mail</label>
-                <input type="email" id="loginEmail" required autocomplete="username">
+                <input type="email" id="loginEmail" required autocomplete="username" placeholder="seu@email.com">
             </div>
             <div class="form-group">
                 <label for="loginSenha">Senha</label>
-                <input type="password" id="loginSenha" required autocomplete="current-password">
+                <input type="password" id="loginSenha" required autocomplete="current-password" placeholder="Sua senha">
             </div>
             <div class="form-actions">
                 <button type="submit">Entrar</button>
@@ -436,16 +428,15 @@
             el.className = tipo === 'ok' ? 'msg success' : 'msg';
         }
 
-        // LOGIN
+        // LOGIN - Redirecionamento automático baseado no role
         formLogin.onsubmit = async function (e) {
             e.preventDefault();
-            const tipoAcesso = document.getElementById('loginTipo').value;
             const email = document.getElementById('loginEmail').value.trim();
             const senha = document.getElementById('loginSenha').value;
             const msgEl = document.getElementById('loginMsg');
 
             if (!email || !senha) {
-                setMsg(msgEl, 'Preencha todos os campos.', 'erro');
+                setMsg(msgEl, 'Preencha e-mail e senha.', 'erro');
                 return;
             }
 
@@ -463,20 +454,11 @@
                 if (resp.ok && data.success) {
                     const userRole = data.data.role || 'batedor';
 
-                    if (tipoAcesso === 'gestor' && userRole !== 'gestor') {
-                        setMsg(msgEl, 'Este usuário não possui permissão de gestor.', 'erro');
-                        return;
-                    }
-
-                    if (tipoAcesso === 'batedor' && userRole === 'gestor') {
-                        setMsg(msgEl, 'Use o acesso de Gestor para esta conta.', 'erro');
-                        return;
-                    }
-
                     // Salvar Token e dados
                     auth.setToken(data.token);
 
-                    if (tipoAcesso === 'gestor') {
+                    // Redirecionamento automático baseado no role
+                    if (userRole === 'gestor') {
                         auth.setGestor(data.data);
                         setMsg(msgEl, 'Login de gestor realizado! Redirecionando...', 'ok');
                         setTimeout(() => { window.location.href = 'gestor.html'; }, 1000);
@@ -499,7 +481,7 @@
                         setTimeout(() => { window.location.href = 'index.html'; }, 1000);
                     }
                 } else {
-                    setMsg(msgEl, data.error || 'Erro ao fazer login.', 'erro');
+                    setMsg(msgEl, data.error || 'E-mail ou senha inválidos.', 'erro');
                 }
             } catch (err) {
                 console.error('Login error:', err);
