@@ -278,6 +278,11 @@
                             <button type="button" class="btn-secondary" onclick="getLocation()">
                                 <i class="fas fa-map-marker-alt"></i> Obter Localização GPS
                             </button>
+                            <small class="form-hint">
+                                <i class="fas fa-info-circle"></i>
+                                Sua localização será usada apenas para mapeamento sanitário e não será 
+                                compartilhada com terceiros sem seu consentimento.
+                            </small>
                             <span id="localizacao" class="text-muted"></span>
                         </div>
                         <div class="form-group">
@@ -312,6 +317,17 @@
                             <input type="file" id="fotosEstabelecimento" accept="image/*" multiple>
                             <small class="form-hint">Fotos da fachada, área de produção, equipamentos, etc.</small>
                             <div id="fotosPreview" class="fotos-grid"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="consentimentoLGPD" class="checkbox-label">
+                                <input type="checkbox" id="consentimentoLGPD" required>
+                                <span class="checkbox-text">
+                                    Declaro que li e concordo com a 
+                                    <a href="politica-privacidade.html" target="_blank">Política de Privacidade</a>. 
+                                    Autorizo o tratamento dos meus dados pessoais para fins de vigilância sanitária 
+                                    e certificação, conforme a LGPD (Lei 13.709/2018).
+                                </span>
+                            </label>
                         </div>
                     </div>
                     <div class="step-buttons">
@@ -1248,6 +1264,11 @@
         <div class="container">
             <p>&copy; 2026 Açaí Seguro - Sistema de Gestão de Qualidade Sanitária</p>
             <p>Desenvolvido para a segurança alimentar e saúde pública</p>
+            <p style="margin-top: 8px;">
+                <a href="politica-privacidade.html" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">
+                    <i class="fas fa-shield-alt"></i> Política de Privacidade
+                </a>
+            </p>
         </div>
     </footer>
 
@@ -1272,6 +1293,12 @@
 
 
     <script type="module" src="js/app.js?v=21"></script>
+    <script type="module">
+        import { initLGPD } from './js/modules/consentimento.js';
+        
+        // Inicializar banner de consentimento LGPD
+        initLGPD();
+    </script>
 </body>
 
 </html>

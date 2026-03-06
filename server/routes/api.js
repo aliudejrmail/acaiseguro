@@ -511,7 +511,7 @@ router.get('/estatisticas/:cpf', async (req, res) => {
 
         // Checklists últimos 30 dias
         const checklists30dias = await db.query(
-            `SELECT COUNT(*) FROM checklists 
+            `SELECT COUNT(*) FROM checklists
             WHERE batedor_id = $1 AND data_checklist >= CURRENT_TIMESTAMP - INTERVAL '30 days'`,
             [batedorId]
         );
@@ -527,6 +527,175 @@ router.get('/estatisticas/:cpf', async (req, res) => {
     } catch (error) {
         console.error('Erro ao buscar estatísticas:', error);
         res.status(500).json({ error: 'Erro ao buscar estatísticas' });
+    }
+});
+
+// ==================== ROTAS LGPD - DIREITOS DO TITULAR ====================
+
+// GET - Exportar todos os dados do usuário (Direito à Portabilidade - Art. 18, V)
+router.get('/meus-dados/exportar', async (req, res) => {
+    try {
+        const usuarioId = req.usuario.id;
+
+        // Buscar dados do usuário
+        const usuario = await db.query(
+            'SELECT id, nome, email, role, criado_em FROM usuarios WHERE id = $1',
+            [usuarioId]
+        );
+
+        // Buscar cadastro do batedor
+        const batedor = await db.query(
+            'SELECT * FROM batedores WHERE usuario_id = $1',
+            [usuarioId]
+        );
+
+        let checklists = { rows: [] };
+        let calculos = { rows: [] };
+        let selos = { rows: [] };
+        let notificacoes = { rows: [] };
+        let analises = { rows: [] };
+
+        if (batedor.rows.length > 0) {
+            const batedorId = batedor.rows[0].id;
+
+            // Buscar checklists
+            checklists = await db.query(
+                'SELECT * FROM checklists WHERE batedor_id = $1 ORDER BY data_checklist DESC',
+                [batedorId]
+            );
+
+            // Buscar cálculos de cloração
+            calculos = await db.query(
+                'SELECT * FROM calculos_cloracao WHERE batedor_id = $1 ORDER BY data_calculo DESC',
+                [batedorId]
+            );
+
+            // Buscar selos
+            selos = await db.query(
+                'SELECT * FROM selos WHERE batedor_id = $1 ORDER BY data_validade DESC',
+                [batedorId]
+            );
+
+            // Buscar análises
+            analises = await db.query(
+                'SELECT * FROM analises WHERE batedor_id = $1 ORDER BY data_analise DESC',
+                [batedorId]
+            );
+        }
+
+        // Buscar notificações
+        notificacoes = await db.query(
+            'SELECT * FROM notificacoes WHERE usuario_id = $1 ORDER BY criada_em DESC',
+            [usuarioId]
+        );
+
+        // Criar objeto JSON estruturado para exportação
+        const exportData = {
+            data_exportacao: new Date().toISOString(),
+            versao_lgpd: '1.0',
+            titular: {
+                usuario: usuario.rows[0] || null,
+                batedor: batedor.rows[0] || null
+            },
+            dados_coletados: {
+                checklists: checklists.rows,
+                calculos_cloracao: calculos.rows,
+                selos: selos.rows,
+                analises: analises.rows,
+                notificacoes: notificacoes.rows
+            }
+        };
+
+        res.json({
+            success: true,
+            message: 'Dados exportados com sucesso',
+            data: exportData
+        });
+    } catch (error) {
+        console.error('Erro ao exportar dados:', error);
+        res.status(500).json({ 
+            success: false,
+            error: 'Erro ao exportar dados. Tente novamente.' 
+        });
+    }
+});
+
+// DELETE - Solicitar exclusão de dados (Direito ao Esquecimento - Art. 18, VI)
+router.delete('/meus-dados/excluir', async (req, res) => {
+    const client = await db.connect();
+    
+    try {
+        const usuarioId = req.usuario.id;
+
+        // Iniciar transação
+        await client.query('BEGIN');
+
+        // Buscar batedor_id se existir
+        const batedorResult = await client.query(
+            'SELECT id FROM batedores WHERE usuario_id = $1',
+            [usuarioId]
+        );
+
+        if (batedorResult.rows.length > 0) {
+            const batedorId = batedorResult.rows[0].id;
+
+            // Excluir dados relacionados em ordem de dependência
+            await client.query('DELETE FROM notificacoes WHERE batedor_id = $1', [batedorId]);
+            await client.query('DELETE FROM requisitos_selos WHERE batedor_id = $1', [batedorId]);
+            await client.query('DELETE FROM selos WHERE batedor_id = $1', [batedorId]);
+            await client.query('DELETE FROM analises WHERE batedor_id = $1', [batedorId]);
+            await client.query('DELETE FROM checklists WHERE batedor_id = $1', [batedorId]);
+            await client.query('DELETE FROM calculos_cloracao WHERE batedor_id = $1', [batedorId]);
+            await client.query('DELETE FROM historico_gestor WHERE batedor_id = $1', [batedorId]);
+            await client.query('DELETE FROM batedores WHERE id = $1', [batedorId]);
+        }
+
+        // Excluir notificações do usuário
+        await client.query('DELETE FROM notificacoes WHERE usuario_id = $1', [usuarioId]);
+
+        // Excluir usuário
+        await client.query('DELETE FROM usuarios WHERE id = $1', [usuarioId]);
+
+        await client.query('COMMIT');
+
+        res.json({
+            success: true,
+            message: 'Dados excluídos com sucesso. Sua conta será encerrada.'
+        });
+    } catch (error) {
+        await client.query('ROLLBACK');
+        console.error('Erro ao excluir dados:', error);
+        res.status(500).json({ 
+            success: false,
+            error: 'Erro ao excluir dados. Tente novamente.' 
+        });
+    } finally {
+        client.release();
+    }
+});
+
+// GET - Log de acessos aos dados do usuário (Art. 18, IV)
+router.get('/meus-dados/acessos', async (req, res) => {
+    try {
+        const usuarioId = req.usuario.id;
+
+        const acessos = await db.query(`
+            SELECT h.data_acao, h.acao, h.detalhes, u.nome as gestor_nome
+            FROM historico_gestor h
+            INNER JOIN batedores b ON h.batedor_id = b.id
+            LEFT JOIN usuarios u ON h.gestor_id = u.id
+            WHERE b.usuario_id = $1
+            ORDER BY h.data_acao DESC
+            LIMIT 100
+        `, [usuarioId]);
+
+        res.json({
+            success: true,
+            data: acessos.rows
+        });
+    } catch (error) {
+        console.error('Erro ao buscar acessos:', error);
+        res.status(500).json({ error: 'Erro ao buscar log de acessos' });
     }
 });
 

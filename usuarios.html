@@ -121,12 +121,26 @@
         }
         .actions-row {
             display: flex;
-            align-items: center;
+            align-items: flex-end;
             gap: 1rem;
             flex-wrap: wrap;
         }
+        .btn-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .btn-wrapper::before {
+            content: 'Ação';
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.95);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            visibility: hidden;
+        }
         .actions-row .btn-primario {
-            padding: 0.625rem 1.25rem;
+            padding: 0.5rem 1.25rem;
             border-radius: var(--border-radius);
             font-weight: 600;
             font-size: var(--font-size-sm);
@@ -135,10 +149,12 @@
             gap: 0.5rem;
             transition: all var(--transition);
             box-shadow: 0 2px 8px rgba(120, 40, 200, 0.3);
+            height: 36px;
         }
-        .actions-row .btn-primario:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(120, 40, 200, 0.4);
+        .btn-wrapper .btn-primario {
+            padding-top: 0.55rem;
+            padding-bottom: 0.40rem;
+            height: auto;
         }
         .filtro-group {
             display: flex;
@@ -295,9 +311,11 @@
             <div class="tabela-header">
                 <h3><i class="fas fa-users"></i> Lista de Usuários</h3>
                 <div class="actions-row">
-                    <button type="button" id="btnNovoUsuario" class="btn-primario" aria-label="Criar novo usuário">
-                        <i class="fas fa-user-plus"></i> Novo Usuário
-                    </button>
+                    <div class="btn-wrapper">
+                        <button type="button" id="btnNovoUsuario" class="btn-primario" aria-label="Criar novo usuário">
+                            <i class="fas fa-user-plus"></i> Novo Usuário
+                        </button>
+                    </div>
                     <div class="filtro-group">
                         <label for="filtroUsuarios">Buscar</label>
                         <input type="text" id="filtroUsuarios" placeholder="Nome ou e-mail...">
@@ -362,6 +380,16 @@
                         <label for="usuarioSenha">Senha</label>
                         <input type="password" id="usuarioSenha" placeholder="Deixe em branco para não alterar">
                     </div>
+                    <div class="form-group">
+                        <label for="usuarioConsentimento" class="checkbox-label">
+                            <input type="checkbox" id="usuarioConsentimento" required>
+                            <span class="checkbox-text">
+                                Declaro que li e concordo com a 
+                                <a href="politica-privacidade.html" target="_blank">Política de Privacidade</a>. 
+                                Autorizo o tratamento dos meus dados pessoais, conforme a LGPD (Lei 13.709/2018).
+                            </span>
+                        </label>
+                    </div>
                     <div class="form-actions">
                         <button type="submit" class="btn-primary">Salvar</button>
                     </div>
@@ -371,6 +399,18 @@
     </div>
 
     <script type="module" src="js/usuarios.js?v=1"></script>
+    <script type="module">
+        import { initLGPD } from './js/modules/consentimento.js';
+
+        // Inicializar banner de consentimento LGPD
+        initLGPD();
+    </script>
+    <!-- Link para Política de Privacidade -->
+    <div style="text-align: center; padding: 1rem; background: #f5f7fa; border-top: 1px solid #e2e8f0; margin-top: 2rem;">
+        <a href="politica-privacidade.html" style="color: #7828c8; text-decoration: none; font-weight: 600; font-size: 0.9rem;">
+            <i class="fas fa-shield-alt"></i> Política de Privacidade
+        </a>
+    </div>
 </body>
 
 </html>

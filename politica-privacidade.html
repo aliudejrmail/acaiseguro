@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Política de Privacidade do sistema Açaí Seguro - Conformidade com a LGPD">
+    <title>Política de Privacidade - Açaí Seguro</title>
+    <link rel="stylesheet" href="css/styles.css?v=24">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --cor-primaria: #7828c8;
+            --cor-primaria-hover: #9333ea;
+            --cor-primaria-light: rgba(120, 40, 200, 0.1);
+            --cor-fundo: #f5f7fa;
+            --cor-fundo-card: #ffffff;
+            --cor-texto-principal: #333;
+            --cor-texto-secundario: #666;
+            --cor-texto-terciario: #999;
+            --cor-borda: #e2e8f0;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --border-radius: 12px;
+            --border-radius-lg: 20px;
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--cor-fundo);
+            color: var(--cor-texto-principal);
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--cor-primaria), var(--cor-primaria-hover));
+            padding: var(--spacing-md) var(--spacing-xl);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        header .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            color: white;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        header .logo i {
+            font-size: 1.8rem;
+        }
+
+        .privacy-container {
+            max-width: 900px;
+            margin: var(--spacing-xl) auto;
+            padding: 0 var(--spacing-md);
+        }
+
+        .privacy-card {
+            background: var(--cor-fundo-card);
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-xl);
+            box-shadow: var(--shadow-md);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        h1 {
+            color: var(--cor-primaria);
+            font-size: 2rem;
+            margin-bottom: var(--spacing-sm);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        h1 i {
+            font-size: 2.2rem;
+        }
+
+        .subtitle {
+            color: var(--cor-texto-secundario);
+            font-size: 1.1rem;
+            margin-bottom: var(--spacing-xl);
+            padding-bottom: var(--spacing-md);
+            border-bottom: 2px solid var(--cor-borda);
+        }
+
+        h2 {
+            color: var(--cor-primaria);
+            font-size: 1.4rem;
+            margin: var(--spacing-xl) 0 var(--spacing-md);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        h2 i {
+            font-size: 1.5rem;
+        }
+
+        h3 {
+            color: var(--cor-texto-principal);
+            font-size: 1.1rem;
+            margin: var(--spacing-lg) 0 var(--spacing-sm);
+        }
+
+        p {
+            margin-bottom: var(--spacing-md);
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin: var(--spacing-md) 0 var(--spacing-md) var(--spacing-xl);
+        }
+
+        li {
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .highlight-box {
+            background: var(--cor-primaria-light);
+            border-left: 4px solid var(--cor-primaria);
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-radius: var(--border-radius);
+            margin: var(--spacing-lg) 0;
+        }
+
+        .highlight-box strong {
+            color: var(--cor-primaria);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: var(--spacing-lg) 0;
+            background: var(--cor-fundo-card);
+        }
+
+        th, td {
+            padding: var(--spacing-md);
+            border: 1px solid var(--cor-borda);
+            text-align: left;
+        }
+
+        th {
+            background: var(--cor-primaria-light);
+            color: var(--cor-primaria);
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background: #f9fafb;
+        }
+
+        .contact-info {
+            background: #f0f9ff;
+            border: 2px solid #0ea5e9;
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            margin: var(--spacing-lg) 0;
+        }
+
+        .contact-info h3 {
+            color: #0369a1;
+            margin-top: 0;
+        }
+
+        .contact-info a {
+            color: var(--cor-primaria);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .contact-info a:hover {
+            text-decoration: underline;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            color: var(--cor-primaria);
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: var(--spacing-lg);
+            transition: all 0.2s;
+        }
+
+        .back-link:hover {
+            gap: var(--spacing-md);
+        }
+
+        .update-date {
+            color: var(--cor-texto-terciario);
+            font-size: 0.9rem;
+            margin-top: var(--spacing-xl);
+            padding-top: var(--spacing-md);
+            border-top: 1px solid var(--cor-borda);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.6rem;
+            }
+
+            h2 {
+                font-size: 1.2rem;
+            }
+
+            .privacy-card {
+                padding: var(--spacing-md);
+            }
+
+            table {
+                font-size: 0.85rem;
+            }
+
+            th, td {
+                padding: var(--spacing-sm);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-leaf"></i>
+                <span>Açaí Seguro</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main class="privacy-container">
+        <a href="javascript:history.back()" class="back-link">
+            <i class="fas fa-arrow-left"></i>
+            Voltar
+        </a>
+
+        <div class="privacy-card">
+            <h1>
+                <i class="fas fa-shield-alt"></i>
+                Política de Privacidade
+            </h1>
+            <p class="subtitle">
+                Em conformidade com a Lei Geral de Proteção de Dados (LGPD) - Lei nº 13.709/2018
+            </p>
+
+            <section>
+                <h2><i class="fas fa-info-circle"></i> 1. Introdução</h2>
+                <p>
+                    O <strong>Açaí Seguro</strong> é um sistema desenvolvido para garantir a conformidade sanitária 
+                    de estabelecimentos comercializadores de açaí, com o objetivo de prevenir a transmissão da 
+                    Doença de Chagas e assegurar a qualidade do produto oferecido à população.
+                </p>
+                <p>
+                    Esta Política de Privacidade descreve como coletamos, usamos, armazenamos e protegemos seus 
+                    dados pessoais, em total conformidade com a LGPD.
+                </p>
+            </section>
+
+            <section>
+                <h2><i class="fas fa-database"></i> 2. Dados Pessoais Coletados</h2>
+                <p>Coletamos e tratamos os seguintes dados pessoais:</p>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Categoria</th>
+                            <th>Dados Específicos</th>
+                            <th>Finalidade</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Identificação</strong></td>
+                            <td>Nome completo, CPF</td>
+                            <td>Identificar o responsável pelo estabelecimento</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Contato</strong></td>
+                            <td>Telefone, E-mail</td>
+                            <td>Comunicação sobre fiscalizações e notificações</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Localização</strong></td>
+                            <td>Endereço completo, Latitude, Longitude</td>
+                            <td>Mapeamento sanitário e georreferenciamento</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Documentos</strong></td>
+                            <td>Alvará sanitário, Foto do documento</td>
+                            <td>Comprovação de regularidade</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Estabelecimento</strong></td>
+                            <td>Nome fantasia, CNPJ</td>
+                            <td>Identificação comercial do negócio</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Fiscalização</strong></td>
+                            <td>Checklists, Pontuações, Observações</td>
+                            <td>Acompanhamento da conformidade sanitária</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Certificações</strong></td>
+                            <td>Selos, Datas de emissão e validade</td>
+                            <td>Controle de certificações ativas</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section>
+                <h2><i class="fas fa-bullseye"></i> 3. Finalidades do Tratamento</h2>
+                <p>Seus dados são utilizados exclusivamente para:</p>
+                <ul>
+                    <li><strong>Fiscalização sanitária:</strong> Monitoramento das condições de higiene e manipulação do açaí</li>
+                    <li><strong>Prevenção da Doença de Chagas:</strong> Controle do processo de cloragem e tratamento da água</li>
+                    <li><strong>Emissão de certificações:</strong> Geração de selos de conformidade para estabelecimentos aprovados</li>
+                    <li><strong>Mapeamento georreferenciado:</strong> Localização precisa dos pontos de venda para planejamento de fiscalizações</li>
+                    <li><strong>Comunicação oficial:</strong> Notificações sobre pendências, aprovações e reprovacões</li>
+                    <li><strong>Histórico de conformidade:</strong> Registro do desempenho sanitário ao longo do tempo</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <strong>Base Legal (Art. 7º da LGPD):</strong> O tratamento é baseado em 
+                    <em>obrigação legal</em> (inciso II) decorrente de normas sanitárias, e em 
+                    <em>consentimento</em> (inciso I) para funcionalidades opcionais como geolocalização.
+                </div>
+            </section>
+
+            <section>
+                <h2><i class="fas fa-user-shield"></i> 4. Seus Direitos (Art. 18 da LGPD)</h2>
+                <p>Como titular de dados pessoais, você tem os seguintes direitos:</p>
+                <ul>
+                    <li><strong>Acesso:</strong> Solicitar cópia de todos os dados que mantemos sobre você</li>
+                    <li><strong>Correção:</strong> Pedir retificação de dados incompletos, inexatos ou desatualizados</li>
+                    <li><strong>Exclusão:</strong> Solicitar a eliminação de dados tratados com base no consentimento</li>
+                    <li><strong>Portabilidade:</strong> Receber seus dados em formato estruturado para transferência a outro sistema</li>
+                    <li><strong>Informação:</strong> Saber com quais entidades compartilhamos seus dados</li>
+                    <li><strong>Revogação:</strong> Retirar o consentimento a qualquer tempo</li>
+                </ul>
+                <p>
+                    Para exercer seus direitos, entre em contato com nosso Encarregado de Proteção de Dados (DPO) 
+                    através do e-mail: <strong>dpo@acaiseguro.gov.br</strong>
+                </p>
+            </section>
+
+            <section>
+                <h2><i class="fas fa-lock"></i> 5. Segurança e Proteção de Dados</h2>
+                <p>Adotamos medidas técnicas e organizativas para proteger seus dados:</p>
+                <ul>
+                    <li><strong>Criptografia:</strong> Senhas armazenadas com hash bcrypt</li>
+                    <li><strong>Autenticação:</strong> Sistema de login com JWT (JSON Web Token)</li>
+                    <li><strong>Controle de acesso:</strong> Perfis diferenciados (gestor e batedor)</li>
+                    <li><strong>Registro de auditoria:</strong> Log de todas as ações realizadas no sistema</li>
+                    <li><strong>Backup regular:</strong> Cópias de segurança periódicas do banco de dados</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2><i class="fas fa-clock"></i> 6. Retenção de Dados</h2>
+                <p>Mantemos seus dados apenas pelo tempo necessário:</p>
+                <ul>
+                    <li><strong>Dados cadastrais:</strong> Enquanto o estabelecimento estiver ativo</li>
+                    <li><strong>Checklists:</strong> 7 anos após a última fiscalização</li>
+                    <li><strong>Selos expirados:</strong> 5 anos após o vencimento</li>
+                    <li><strong>Cálculos de cloração:</strong> 3 anos</li>
+                    <li><strong>Notificações lidas:</strong> 2 anos</li>
+                </ul>
+                <p>
+                    Após esses períodos, os dados são automaticamente excluídos ou anonimizados, 
+                    salvo quando houver obrigação legal de manutenção.
+                </p>
+            </section>
+
+            <section>
+                <h2><i class="fas fa-share-alt"></i> 7. Compartilhamento de Dados</h2>
+                <p>Seus dados <strong>NÃO são compartilhados</strong> com terceiros para fins comerciais.</p>
+                <p>O compartilhamento ocorre apenas quando necessário para:</p>
+                <ul>
+                    <li><strong>Autoridades sanitárias:</strong> Vigilância Sanitária Municipal/Estadual</li>
+                    <li><strong>Ministério Público:</strong> Quando requisitado judicialmente</li>
+                    <li><strong>Prestadores de serviço:</strong> Hospedagem em nuvem (com acordo de confidencialidade)</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2><i class="fas fa-cookie-bite"></i> 8. Cookies e Tecnologias Similares</h2>
+                <p>Utilizamos:</p>
+                <ul>
+                    <li><strong>LocalStorage:</strong> Para salvar dados temporários do formulário (caso haja queda de conexão)</li>
+                    <li><strong>JWT Token:</strong> Para manter sua sessão autenticada</li>
+                </ul>
+                <p>
+                    Ao utilizar nosso sistema, você concorda com o uso dessas tecnologias estritamente necessárias 
+                    para o funcionamento da aplicação.
+                </p>
+            </section>
+
+            <section>
+                <h2><i class="fas fa-child"></i> 9. Proteção de Dados de Crianças e Adolescentes</h2>
+                <p>
+                    O sistema não é direcionado a menores de 18 anos. Caso identifiquemos coleta de dados de 
+                    crianças ou adolescentes sem o devido consentimento dos pais ou responsáveis, adotaremos 
+                    medidas para exclusão imediata dos dados.
+                </p>
+            </section>
+
+            <section>
+                <h2><i class="fas fa-exclamation-triangle"></i> 10. Incidentes de Segurança</h2>
+                <p>
+                    Em caso de incidente de segurança que possa acarretar risco ou dano relevante aos titulares, 
+                    comprometemo-nos a comunicar à Autoridade Nacional de Proteção de Dados (ANPD) e aos afetados 
+                    dentro do prazo legal estabelecido.
+                </p>
+            </section>
+
+            <section>
+                <h2><i class="fas fa-envelope"></i> 11. Contato do Encarregado (DPO)</h2>
+                <div class="contact-info">
+                    <h3><i class="fas fa-user-tie"></i> Dados de Contato</h3>
+                    <p>Para dúvidas, solicitações ou exercício de seus direitos, entre em contato:</p>
+                    <ul>
+                        <li><strong>E-mail:</strong> <a href="mailto:dpo@acaiseguro.gov.br">dpo@acaiseguro.gov.br</a></li>
+                        <li><strong>Telefone:</strong> (XX) XXXX-XXXX</li>
+                        <li><strong>Endereço:</strong> [Endereço do órgão responsável]</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section>
+                <h2><i class="fas fa-sync-alt"></i> 12. Atualizações desta Política</h2>
+                <p>
+                    Esta Política de Privacidade pode ser atualizada periodicamente para refletir mudanças nas 
+                    práticas de tratamento de dados ou na legislação aplicável. Recomendamos a consulta periódica 
+                    desta página.
+                </p>
+            </section>
+
+            <p class="update-date">
+                <strong>Última atualização:</strong> 5 de março de 2026
+            </p>
+        </div>
+    </main>
+
+    <!-- Script de Consentimento -->
+    <script>
+        // Verificar e exibir banner de consentimento se necessário
+        document.addEventListener('DOMContentLoaded', function() {
+            const consentimento = localStorage.getItem('lgpd_consentimento');
+            if (!consentimento) {
+                exibirBannerLGPD();
+            }
+        });
+
+        function exibirBannerLGPD() {
+            const banner = document.createElement('div');
+            banner.id = 'lgpdBanner';
+            banner.style.cssText = `
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: linear-gradient(135deg, #7828c8, #9333ea);
+                color: white;
+                padding: 1.5rem;
+                box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
+                z-index: 9999;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 2rem;
+                flex-wrap: wrap;
+            `;
+            
+            banner.innerHTML = `
+                <div style="flex: 1; min-width: 300px; max-width: 800px;">
+                    <p style="margin: 0; text-align: center;">
+                        <i class="fas fa-cookie-bite"></i>
+                        Utilizamos cookies e dados pessoais para garantir conformidade sanitária. 
+                        Ao continuar navegando, você concorda com nossa 
+                        <a href="politica-privacidade.html" target="_blank" style="color: #fbbf24; text-decoration: underline;">
+                            Política de Privacidade
+                        </a>.
+                    </p>
+                </div>
+                <button onclick="aceitarLGPD()" style="
+                    background: #22c55e;
+                    color: white;
+                    border: none;
+                    padding: 0.75rem 1.5rem;
+                    border-radius: 8px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    font-size: 1rem;
+                    transition: all 0.2s;
+                " onmouseover="this.style.background='#16a34a'" onmouseout="this.style.background='#22c55e'">
+                    <i class="fas fa-check"></i> Aceitar e Continuar
+                </button>
+            `;
+            
+            document.body.appendChild(banner);
+        }
+
+        function aceitarLGPD() {
+            localStorage.setItem('lgpd_consentimento', 'true');
+            localStorage.setItem('lgpd_data_consentimento', new Date().toISOString());
+            const banner = document.getElementById('lgpdBanner');
+            if (banner) {
+                banner.style.opacity = '0';
+                banner.style.transition = 'opacity 0.3s';
+                setTimeout(() => banner.remove(), 300);
+            }
+        }
+    </script>
+</body>
+</html>
